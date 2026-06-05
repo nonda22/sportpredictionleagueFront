@@ -403,6 +403,28 @@
   color: var(--gold-light);
 }
 
+.score-lines {
+  display: grid;
+  gap: 5px;
+  min-width: 130px;
+}
+
+.score-lines span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--silver);
+  font-weight: 900;
+}
+
+.score-lines small {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
 .standings-message {
   padding: 28px 18px;
   color: var(--text-secondary);

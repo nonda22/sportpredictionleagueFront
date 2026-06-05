@@ -81,7 +81,17 @@
                 <td>{{ entryDate(entry) }}</td>
                 <td><strong>{{ entryMatch(entry) }}</strong></td>
                 <td>{{ entrySelection(entry) }}</td>
-                <td>{{ entry.result ?? '-' }}</td>
+                <td>
+                  @if (scoreRows(entry).length) {
+                    <div class="score-lines">
+                      @for (row of scoreRows(entry); track row.label) {
+                        <span><small>{{ row.label }}</small>{{ row.value }}</span>
+                      }
+                    </div>
+                  } @else {
+                    -
+                  }
+                </td>
                 <td>{{ entry.outcome ?? entry.reason ?? '-' }}</td>
                 <td><strong>{{ entryPoints(entry) | number: '1.0-2' }}</strong></td>
               </tr>

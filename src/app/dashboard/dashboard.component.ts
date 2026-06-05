@@ -4,6 +4,7 @@ import type {
   LeaderboardEntryDto,
   PlayerStanding,
   ScoreLedgerEntryDto,
+  ScorePairDto,
   UserSelectionDto,
   UserSelectionItemDto,
 } from '../models';
@@ -69,6 +70,57 @@ export class DashboardComponent {
 
   protected entryCompetitor(entry: ScoreLedgerEntryDto): string {
     return entry.competitorName ?? entry.selectionName ?? '-';
+  }
+
+  protected entryMatch(entry: ScoreLedgerEntryDto): string {
+    const home = entry.eventParticipants?.find((participant) => participant.side === 'HOME')?.competitorName;
+    const away = entry.eventParticipants?.find((participant) => participant.side === 'AWAY')?.competitorName;
+
+    if (home || away) {
+      return [home, away].filter(Boolean).join(' vs ');
+    }
+
+    if (entry.eventName || entry.matchName || entry.fixtureName) {
+      return entry.eventName ?? entry.matchName ?? entry.fixtureName ?? '-';
+    }
+
+    if (entry.homeCompetitorName || entry.awayCompetitorName) {
+      return [entry.homeCompetitorName, entry.awayCompetitorName].filter(Boolean).join(' vs ');
+    }
+
+    return entry.eventId ? `Mec #${entry.eventId}` : '-';
+  }
+
+  protected scoreRows(entry: ScoreLedgerEntryDto): { label: string; value: string }[] {
+    const score = entry.score;
+
+    if (!score) {
+      return entry.result ? [{ label: 'Rezultat', value: entry.result }] : [];
+    }
+
+    const rows: { label: string; value: string }[] = [];
+
+    if (score.halfTime) {
+      rows.push({ label: 'Poluvreme', value: this.formatScore(score.halfTime) });
+    }
+
+    if (score.fullTime) {
+      rows.push({ label: 'Regularno', value: this.formatScore(score.fullTime) });
+    }
+
+    if ((score.duration === 'EXTRA_TIME' || score.duration === 'PENALTY_SHOOTOUT') && score.extraTime) {
+      rows.push({ label: 'Produzeci', value: this.formatScore(score.extraTime) });
+    }
+
+    if (score.duration === 'PENALTY_SHOOTOUT' && score.penalties) {
+      rows.push({ label: 'Penali', value: this.formatScore(score.penalties) });
+    }
+
+    if (score.winner) {
+      rows.push({ label: 'Pobednik', value: score.winner });
+    }
+
+    return rows;
   }
 
   protected openPlayerResults(player: LeaderboardEntryDto): void {
@@ -219,5 +271,9 @@ export class DashboardComponent {
         this.selectionMessage.set('Izbor timova nije ucitan. Pokusajte ponovo kasnije.');
       },
     });
+  }
+
+  private formatScore(score: ScorePairDto): string {
+    return `${score.home}:${score.away}`;
   }
 }

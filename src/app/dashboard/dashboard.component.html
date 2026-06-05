@@ -237,6 +237,8 @@
           <thead>
             <tr>
               <th scope="col">Tim</th>
+              <th scope="col">Mec</th>
+              <th scope="col">Rezultat</th>
               <th scope="col">Pravilo</th>
               <th scope="col">Razlog</th>
               <th scope="col">Poeni</th>
@@ -251,6 +253,18 @@
                     <strong>{{ entryCompetitor(entry) }}</strong>
                   </div>
                 </td>
+                <td>{{ entryMatch(entry) }}</td>
+                <td>
+                  @if (scoreRows(entry).length) {
+                    <div class="score-lines">
+                      @for (row of scoreRows(entry); track row.label) {
+                        <span><small>{{ row.label }}</small>{{ row.value }}</span>
+                      }
+                    </div>
+                  } @else {
+                    -
+                  }
+                </td>
                 <td>{{ entry.ruleCode || '-' }}</td>
                 <td>{{ entry.reason || '-' }}</td>
                 <td><strong class="points">{{ entryPoints(entry) }}</strong></td>
@@ -259,11 +273,11 @@
 
             @if (isLoadingScoring()) {
               <tr>
-                <td colspan="4" class="standings-message">Obracun se ucitava...</td>
+                <td colspan="6" class="standings-message">Obracun se ucitava...</td>
               </tr>
             } @else if (scoringMessage()) {
               <tr>
-                <td colspan="4" class="standings-message">{{ scoringMessage() }}</td>
+                <td colspan="6" class="standings-message">{{ scoringMessage() }}</td>
               </tr>
             }
           </tbody>

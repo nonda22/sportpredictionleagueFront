@@ -120,4 +120,35 @@ export type ScoreLedgerEntryDto = {
   pointsDelta?: number;
   awardedPoints?: number;
   calculatedAt?: string;
+  score?: EventScoreDto;
+  eventParticipants?: EventParticipantDto[];
+};
+
+export type ScoreDuration = 'REGULAR' | 'EXTRA_TIME' | 'PENALTY_SHOOTOUT';
+
+export type ScorePairDto = {
+  home: number;
+  away: number;
+};
+
+export type EventScoreDto = {
+  winner?: string;
+  duration?: ScoreDuration;
+  halfTime?: ScorePairDto;
+  fullTime?: ScorePairDto;
+  extraTime?: ScorePairDto;
+  penalties?: ScorePairDto;
+};
+
+export type EventParticipantSide = 'HOME' | 'AWAY';
+
+export type EventParticipantDto = {
+  id: number;
+  competitorId: number;
+  competitorName: string;
+  side?: EventParticipantSide;
+  seed?: number;
+  rank?: number;
+  winner?: boolean;
+  resultPoints?: number;
 };
