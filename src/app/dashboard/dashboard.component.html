@@ -224,7 +224,7 @@
           <p class="panel__label">Poeni</p>
           <h2 id="scoring-title">Obracun</h2>
         </div>
-        <span>{{ scoringPoints() }} pts</span>
+        <span>{{ formatPoints(scoringPoints()) }} pts</span>
       </div>
 
       <div class="selection-summary">
@@ -239,8 +239,6 @@
               <th scope="col">Tim</th>
               <th scope="col">Mec</th>
               <th scope="col">Rezultat</th>
-              <th scope="col">Pravilo</th>
-              <th scope="col">Razlog</th>
               <th scope="col">Poeni</th>
             </tr>
           </thead>
@@ -248,36 +246,86 @@
             @for (entry of scoringBreakdown(); track $index) {
               <tr>
                 <td>
-                  <div class="team-cell">
+                  <div
+                    class="team-cell"
+                    [class]="'team-cell--' + entryOutcome(entry)"
+                    [title]="entryCompetitor(entry)"
+                    [attr.aria-label]="entryCompetitor(entry)"
+                  >
                     <span>{{ entryCompetitor(entry).slice(0, 1) }}</span>
-                    <strong>{{ entryCompetitor(entry) }}</strong>
                   </div>
                 </td>
-                <td>{{ entryMatch(entry) }}</td>
+                <td>
+                  @if (entry.eventParticipants?.length) {
+                    <div class="match-participants">
+                      @for (participant of entry.eventParticipants; track participant.id) {
+                        <strong
+                          class="match-team"
+                          [class.is-mine]="isEntryParticipant(entry, participant.competitorName)"
+                          [class.match-team--win]="entryParticipantOutcome(entry, participant) === 'win'"
+                          [class.match-team--draw]="entryParticipantOutcome(entry, participant) === 'draw'"
+                          [class.match-team--loss]="entryParticipantOutcome(entry, participant) === 'loss'"
+                          [class.match-team--unknown]="entryParticipantOutcome(entry, participant) === 'unknown'"
+                        >
+                          <span class="match-icon" aria-hidden="true">
+                            @if (entryParticipantOutcome(entry, participant) === 'win') {
+                              <svg viewBox="0 0 24 24">
+                                <path d="M20.3 6.7 9 18l-5.3-5.3 1.4-1.4L9 14.9 18.9 5.3l1.4 1.4Z" />
+                              </svg>
+                            } @else if (entryParticipantOutcome(entry, participant) === 'draw') {
+                              <svg viewBox="0 0 24 24">
+                                <path d="M5 11h14v2H5v-2Z" />
+                              </svg>
+                            } @else if (entryParticipantOutcome(entry, participant) === 'loss') {
+                              <svg viewBox="0 0 24 24">
+                                <path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z" />
+                              </svg>
+                            } @else {
+                              <svg viewBox="0 0 24 24">
+                                <path d="M12 3 20 6v6c0 4.4-3 7.7-8 9-5-1.3-8-4.6-8-9V6l8-3Zm0 2.2L6 7.4V12c0 3.3 2.1 5.8 6 7 3.9-1.2 6-3.7 6-7V7.4l-6-2.2Z" />
+                              </svg>
+                            }
+                          </span>
+                          <span>{{ participant.competitorName }}</span>
+                        </strong>
+                        @if (!$last) {
+                          <span>vs</span>
+                        }
+                      }
+                    </div>
+                  } @else {
+                    {{ entryMatch(entry) }}
+                  }
+                </td>
                 <td>
                   @if (scoreRows(entry).length) {
-                    <div class="score-lines">
-                      @for (row of scoreRows(entry); track row.label) {
-                        <span><small>{{ row.label }}</small>{{ row.value }}</span>
-                      }
+                    <div class="score-result" [class]="'score-result--' + entryOutcome(entry)">
+                      <div class="score-lines">
+                        @for (row of scoreRows(entry); track row.label) {
+                          <span><small>{{ row.label }}</small>{{ row.value }}</span>
+                        }
+                      </div>
+                      <strong>{{ entryOutcomeLabel(entry) }}</strong>
                     </div>
                   } @else {
                     -
                   }
                 </td>
-                <td>{{ entry.ruleCode || '-' }}</td>
-                <td>{{ entry.reason || '-' }}</td>
-                <td><strong class="points">{{ entryPoints(entry) }}</strong></td>
+                <td>
+                  <strong class="points" [class]="'points--' + entryOutcome(entry)">
+                    {{ formatPoints(entryPoints(entry)) }}
+                  </strong>
+                </td>
               </tr>
             }
 
             @if (isLoadingScoring()) {
               <tr>
-                <td colspan="6" class="standings-message">Obracun se ucitava...</td>
+                <td colspan="4" class="standings-message">Obracun se ucitava...</td>
               </tr>
             } @else if (scoringMessage()) {
               <tr>
-                <td colspan="6" class="standings-message">{{ scoringMessage() }}</td>
+                <td colspan="4" class="standings-message">{{ scoringMessage() }}</td>
               </tr>
             }
           </tbody>

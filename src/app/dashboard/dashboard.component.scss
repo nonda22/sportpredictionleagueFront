@@ -403,10 +403,97 @@
   color: var(--gold-light);
 }
 
+.team-cell--win > span,
+.points--win,
+.match-team.is-mine.match-team--win {
+  border-color: rgba(232, 185, 70, 0.62);
+  color: var(--gold-light);
+}
+
+.team-cell--draw > span,
+.points--draw,
+.match-team.is-mine.match-team--draw {
+  border-color: rgba(197, 199, 204, 0.56);
+  color: var(--silver);
+}
+
+.team-cell--loss > span,
+.points--loss,
+.match-team.is-mine.match-team--loss {
+  border-color: rgba(255, 120, 120, 0.58);
+  color: #ff9f9f;
+}
+
+.match-participants {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.match-participants span {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.match-team {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--silver);
+}
+
+.match-team > span:last-child {
+  color: inherit;
+  font-size: inherit;
+  text-transform: none;
+}
+
+.match-icon {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  color: inherit;
+}
+
+.match-icon svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+.score-result {
+  display: inline-grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+}
+
+.score-result > strong {
+  justify-self: start;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.score-result--win {
+  border-color: rgba(232, 185, 70, 0.58);
+}
+
+.score-result--draw {
+  border-color: rgba(197, 199, 204, 0.42);
+}
+
+.score-result--loss {
+  border-color: rgba(255, 120, 120, 0.44);
+}
+
 .score-lines {
   display: grid;
   gap: 5px;
-  min-width: 130px;
 }
 
 .score-lines span {
