@@ -1,0 +1,218 @@
+.player-results {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.player-results__hero,
+.player-results__stats,
+.player-results__teams,
+.player-results__history {
+  border: 1px solid rgba(232, 185, 70, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.36);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.player-results__hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px;
+}
+
+.player-results h2,
+.player-results h3 {
+  margin: 8px 0 0;
+  color: var(--silver);
+  text-transform: uppercase;
+}
+
+.player-results h2 {
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: 1;
+}
+
+.player-results h3 {
+  font-size: clamp(1.35rem, 3vw, 2.2rem);
+}
+
+.player-results__score {
+  display: grid;
+  gap: 4px;
+  min-width: 150px;
+  text-align: right;
+}
+
+.player-results__score span {
+  color: var(--gold-light);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.player-results__score small {
+  color: var(--text-secondary);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.player-results__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.player-results__stats div {
+  display: grid;
+  gap: 8px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.player-results__stats span {
+  color: rgba(197, 199, 204, 0.76);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.player-results__stats strong {
+  color: var(--gold-light);
+  font-size: 1.65rem;
+}
+
+.player-results__teams,
+.player-results__history {
+  margin-top: 16px;
+  padding: 22px;
+}
+
+.player-results__section-title {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.contest-picker {
+  display: grid;
+  gap: 6px;
+  min-width: 220px;
+}
+
+.contest-picker span {
+  color: rgba(197, 199, 204, 0.76);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.contest-picker select {
+  min-height: 42px;
+  border: 1px solid rgba(232, 185, 70, 0.28);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.36);
+  color: var(--silver);
+  font: inherit;
+  font-weight: 800;
+  padding: 0 12px;
+}
+
+.player-results__message {
+  margin: 0;
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.player-results__message--error {
+  color: #ffb3b3;
+}
+
+.history-table-wrap {
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+}
+
+.history-table th,
+.history-table td {
+  padding: 15px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  text-align: left;
+}
+
+.history-table th {
+  border-top: 0;
+  color: rgba(197, 199, 204, 0.76);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.history-table td strong {
+  color: var(--silver);
+}
+
+.outcome {
+  display: inline-flex;
+  min-width: 70px;
+  min-height: 30px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.outcome--pobeda {
+  color: var(--gold-light);
+  background: rgba(217, 165, 49, 0.1);
+}
+
+.outcome--remi {
+  color: var(--silver);
+  background: rgba(197, 199, 204, 0.1);
+}
+
+.outcome--poraz {
+  color: #ff9f9f;
+  background: rgba(255, 80, 80, 0.1);
+}
+
+@media (max-width: 760px) {
+  .player-results__hero {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .player-results__score {
+    text-align: left;
+  }
+
+  .player-results__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .player-results__section-title {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .contest-picker {
+    min-width: 0;
+  }
+}

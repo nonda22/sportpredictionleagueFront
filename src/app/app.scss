@@ -1,0 +1,92 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  color: var(--text-primary);
+  background: var(--app-black);
+  font-family:
+    Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.dashboard-shell {
+  min-height: 100dvh;
+  padding: clamp(24px, 5vw, 72px);
+  background:
+    radial-gradient(circle at 22% 24%, rgba(217, 165, 49, 0.18), transparent 24rem),
+    radial-gradient(circle at 78% 18%, rgba(255, 255, 255, 0.08), transparent 22rem),
+    #000;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  max-width: 1180px;
+  margin: 0 auto 34px;
+}
+
+.dashboard-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dashboard-brand img {
+  width: 94px;
+  height: auto;
+  filter: drop-shadow(0 0 18px rgba(232, 185, 70, 0.18));
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--gold-light);
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.dashboard-brand h1 {
+  margin: 0;
+  color: var(--silver);
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.dashboard-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logout-button {
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(232, 185, 70, 0.7);
+  border-radius: 6px;
+  color: var(--gold-light);
+  background: rgba(255, 255, 255, 0.035);
+  font: inherit;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  color: #111;
+  background: linear-gradient(180deg, var(--gold-light), var(--gold));
+}
+
+@media (max-width: 900px) {
+  .dashboard-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .dashboard-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}

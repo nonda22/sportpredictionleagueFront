@@ -1,1 +1,235 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --app-black: #000;
+  --surface-dark: #050505;
+  --surface-elevated: #0d1117;
+  --gold: #d9a531;
+  --gold-light: #ffe176;
+  --gold-deep: #8a5b0d;
+  --silver: #f4f5f7;
+  --text-primary: #fff;
+  --text-secondary: #c5c7cc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  margin: 0;
+  background: #000;
+}
+
+body {
+  color: var(--text-primary);
+}
+
+.panel__label {
+  margin: 0;
+  color: var(--gold-light);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.standings-panel {
+  max-width: 1180px;
+  margin: 18px auto 0;
+  border: 1px solid rgba(232, 185, 70, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+    rgba(0, 0, 0, 0.36);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+  overflow: hidden;
+}
+
+.standings-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px;
+  border-bottom: 1px solid rgba(232, 185, 70, 0.18);
+}
+
+.standings-panel__header h2 {
+  margin: 8px 0 0;
+  color: var(--silver);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+}
+
+.standings-panel__header > span {
+  color: var(--gold-light);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.standings-table-wrap {
+  overflow-x: auto;
+}
+
+.standings-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+}
+
+.standings-table th,
+.standings-table td {
+  padding: 16px 24px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.standings-table th {
+  color: rgba(197, 199, 204, 0.76);
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.standings-table tbody tr {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+}
+
+.standings-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.standings-table tbody tr.player-row {
+  cursor: pointer;
+}
+
+.standings-table tbody tr.player-row:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: -2px;
+}
+
+.standings-table tbody tr.is-podium {
+  color: var(--text-primary);
+  background: linear-gradient(90deg, rgba(232, 185, 70, 0.12), rgba(255, 255, 255, 0.02));
+}
+
+.standings-table tbody tr.rank-1 {
+  background: linear-gradient(90deg, rgba(232, 185, 70, 0.22), rgba(255, 255, 255, 0.03));
+}
+
+.standings-table tbody tr.rank-2 {
+  background: linear-gradient(90deg, rgba(197, 199, 204, 0.18), rgba(255, 255, 255, 0.025));
+}
+
+.standings-table tbody tr.rank-3 {
+  background: linear-gradient(90deg, rgba(176, 112, 55, 0.2), rgba(255, 255, 255, 0.025));
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 58px;
+  color: var(--text-secondary);
+}
+
+.rank-badge svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.rank-1 .rank-badge {
+  color: var(--gold-light);
+}
+
+.rank-2 .rank-badge {
+  color: var(--silver);
+}
+
+.rank-3 .rank-badge {
+  color: #d38a4d;
+}
+
+.player-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.player-cell span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(232, 185, 70, 0.34);
+  border-radius: 50%;
+  color: var(--gold-light);
+  background: rgba(0, 0, 0, 0.36);
+  font-weight: 900;
+}
+
+.player-cell strong,
+.points {
+  color: var(--silver);
+}
+
+.player-cell small {
+  display: block;
+  margin-top: 3px;
+  color: rgba(197, 199, 204, 0.68);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.trend {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 48px;
+  min-height: 30px;
+  border: 1px solid rgba(232, 185, 70, 0.24);
+  border-radius: 999px;
+  color: var(--gold-light);
+  background: rgba(217, 165, 49, 0.1);
+  font-weight: 900;
+}
+
+.selected-teams {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.selected-teams span {
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid rgba(232, 185, 70, 0.26);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.035);
+  overflow-wrap: anywhere;
+}
+
+.selected-teams strong {
+  color: var(--gold-light);
+}
+
+@media (max-width: 900px) {
+  .standings-panel__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .selected-teams {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .selected-teams {
+    grid-template-columns: 1fr;
+  }
+}

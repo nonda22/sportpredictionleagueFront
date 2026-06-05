@@ -1,0 +1,229 @@
+X [ERROR] TS2339: Property 'team' does not exist on type 'PlayerStanding'. [plugin angular-compiler]
+
+    src/app/app.html:242:30:
+      242 │                 <td>{{ player.team }}</td>
+          ╵                               ~~~~
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:19:15:
+      19 │   templateUrl: './app.html',
+         ╵                ~~~~~~~~~~~~
+
+
+X [ERROR] TS2339: Property 'correctScores' does not exist on type 'PlayerStanding'. [plugin angular-compiler]
+
+    src/app/app.html:243:30:
+      243 │                 <td>{{ player.correctScores }}</td>
+          ╵                               ~~~~~~~~~~~~~
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:19:15:
+      19 │   templateUrl: './app.html',
+         ╵                ~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: @else block must be last inside the conditional [plugin angular-compiler]
+
+    src/app/app.html:262:2:
+      262 │ } @else {
+          ╵   ~~~~~~~
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:21:15:
+      21 │   templateUrl: './app.html',
+         ╵                ~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Conditional can only have one @else block [plugin angular-compiler]
+
+    src/app/app.html:280:2:
+      280 │ } @else {
+          ╵   ~~~~~~~
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:21:15:
+      21 │   templateUrl: './app.html',
+         ╵                ~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'number'.
+To fix this, import the "DecimalPipe" class from "@angular/common" and add it to the "imports" array of the component. [plugin angular-compiler]
+
+    src/app/player-results/player-results.component.html:25:40:
+      25 │       <strong>{{ totalHistoryPoints() | number: '1.0-2' }}</strong>
+         ╵                                         ~~~~~~
+
+  Error occurs in the template of component PlayerResultsComponent.
+
+    src/app/player-results/player-results.component.ts:30:15:
+      30 │   templateUrl: './player-results.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'number'.
+To fix this, import the "DecimalPipe" class from "@angular/common" and add it to the "imports" array of the component. [plugin angular-compiler]
+
+    src/app/player-results/player-results.component.html:65:34:
+      65 │               <td>{{ match.odds | number: '1.2-2' }}</td>
+         ╵                                   ~~~~~~
+
+  Error occurs in the template of component PlayerResultsComponent.
+
+    src/app/player-results/player-results.component.ts:30:15:
+      30 │   templateUrl: './player-results.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'number'.
+To fix this, import the "DecimalPipe" class from "@angular/common" and add it to the "imports" array of the component. [plugin angular-compiler]
+
+    src/app/player-results/player-results.component.html:68:48:
+      68 │ ...<td><strong>{{ pointsFor(match) | number: '1.0-2' }}</strong></td>
+         ╵                                      ~~~~~~
+
+  Error occurs in the template of component PlayerResultsComponent.
+
+    src/app/player-results/player-results.component.ts:30:15:
+      30 │   templateUrl: './player-results.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: @else block must be last inside the conditional [plugin angular-compiler]
+
+    src/app/app.html:262:2:
+      262 │ } @else {
+          ╵   ~~~~~~~
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:21:15:
+      21 │   templateUrl: './app.html',
+         ╵                ~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Conditional can only have one @else block [plugin angular-compiler]
+
+    src/app/app.html:280:2:
+      280 │ } @else {
+          ╵   ~~~~~~~
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:21:15:
+      21 │   templateUrl: './app.html',
+         ╵                ~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'number'.
+To fix this, import the "DecimalPipe" class from "@angular/common" and add it to the "imports" array of the component. [plugin angular-compiler]
+
+    src/app/player-results/player-results.component.html:25:40:
+      25 │       <strong>{{ totalHistoryPoints() | number: '1.0-2' }}</strong>
+         ╵                                         ~~~~~~
+
+  Error occurs in the template of component PlayerResultsComponent.
+
+    src/app/player-results/player-results.component.ts:30:15:
+      30 │   templateUrl: './player-results.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'number'.
+To fix this, import the "DecimalPipe" class from "@angular/common" and add it to the "imports" array of the component. [plugin angular-compiler]
+
+    src/app/player-results/player-results.component.html:65:34:
+      65 │               <td>{{ match.odds | number: '1.2-2' }}</td>
+         ╵                                   ~~~~~~
+
+  Error occurs in the template of component PlayerResultsComponent.
+
+    src/app/player-results/player-results.component.ts:30:15:
+      30 │   templateUrl: './player-results.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG8004: No pipe found with name 'number'.
+To fix this, import the "DecimalPipe" class from "@angular/common" and add it to the "imports" array of the component. [plugin angular-compiler]
+
+    src/app/player-results/player-results.component.html:68:48:
+      68 │ ...<td><strong>{{ pointsFor(match) | number: '1.0-2' }}</strong></td>
+         ╵                                      ~~~~~~
+
+  Error occurs in the template of component PlayerResultsComponent.
+
+    src/app/player-results/player-results.component.ts:30:15:
+      30 │   templateUrl: './player-results.component.html',
+         ╵                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: @else block must be last inside the conditional [plugin angular-compiler]
+
+    src/app/app.html:262:2:
+      262 │ } @else {
+          ╵   ~~~~~~~
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:21:15:
+      21 │   templateUrl: './app.html',
+         ╵                ~~~~~~~~~~~~
+
+
+X [ERROR] NG5002: Conditional can only have one @else block [plugin angular-compiler]
+
+    src/app/app.html:280:2:
+      280 │ } @else {
+          ╵   ~~~~~~~
+
+  Error occurs in the template of component App.
+
+    src/app/app.ts:21:15:
+      21 │   templateUrl: './app.html',
+         ╵                ~~~~~~~~~~~~
+
+
+X [ERROR] TS2459: Module '"./player-results/player-results.component"' declares 'PlayerMatch' locally, but it is not exported. [plugin angular-compiler]
+
+    src/app/app.ts:3:9:
+      3 │ import { PlayerMatch, PlayerResultsComponent } from './player-resul...
+        ╵          ~~~~~~~~~~~
+
+  'PlayerMatch' is declared here.
+
+    src/app/player-results/player-results.component.ts:3:23:
+      3 │ import { MatchOutcome, PlayerMatch, PlayerStanding } from '../models';
+        ╵                        ~~~~~~~~~~~
+
+
+X [ERROR] NG2008: Could not find stylesheet file './app.scss'. [plugin angular-compiler]
+
+    src/app/app.ts:13:12:
+      13 │   styleUrl: './app.scss'
+         ╵             ~~~~~~~~~~~~
+
+
+X [ERROR] NG2008: Could not find stylesheet file './app.scss'. [plugin angular-compiler]
+
+    src/app/app.ts:13:12:
+      13 │   styleUrl: './app.scss'
+         ╵             ~~~~~~~~~~~~
+
+
+X [ERROR] NG2008: Could not find stylesheet file './app.scss'. [plugin angular-compiler]
+
+    src/app/app.ts:13:12:
+      13 │   styleUrl: './app.scss'
+         ╵             ~~~~~~~~~~~~
+
+
+X [ERROR] TS2741: Property '"email-verified"' is missing in type '{ login: string; 'create-account': string; 'forgot-password': string; dashboard: string; 'team-selection': string; 'player-results': string; }' but required in type 'Record<AppPage, string>'. [plugin angular-compiler]
+
+    src/app/app.ts:224:10:
+      224 │     const pathByPage: Record<AppPage, string> = {
+          ╵           ~~~~~~~~~~
+
+

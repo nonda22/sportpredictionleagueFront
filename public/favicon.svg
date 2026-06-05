@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Fifabet trophy ball favicon">
+  <defs>
+    <linearGradient id="gold" x1="18" y1="10" x2="48" y2="58">
+      <stop offset="0" stop-color="#ffe176" />
+      <stop offset="0.46" stop-color="#d9a531" />
+      <stop offset="1" stop-color="#8a5b0d" />
+    </linearGradient>
+    <linearGradient id="ball" x1="19" y1="14" x2="45" y2="42">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#d6d9df" />
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M14 28h8v7c0 4.5 2.7 8.7 7 10.8v-5.3c-1.6-1.4-2.5-3.4-2.5-5.5V24h11v11c0 2.1-.9 4.1-2.5 5.5v5.3c4.3-2.1 7-6.3 7-10.8v-7h8v7c0 8.9-6.4 16.6-15 18.4V57h5v4H24v-4h5v-3.6c-8.6-1.8-15-9.5-15-18.4v-7Z"
+    fill="url(#gold)"
+  />
+  <path d="M23 50h18l-3 5H26l-3-5Z" fill="#ffe176" opacity=".9" />
+
+  <circle cx="32" cy="23" r="17" fill="url(#ball)" />
+  <path
+    d="M32 10a17 17 0 0 1 16.9 15.1A17 17 0 0 0 17.5 16.2 17 17 0 0 1 32 10Z"
+    fill="#fff"
+    opacity=".45"
+  />
+  <path d="M32 15l7 5-2.7 8.1h-8.6L25 20l7-5Z" fill="#07101a" />
+  <path d="M17.8 20.2l6.4-2.2 3.6 5.1-4.7 6.4-6.3-1.7a17.3 17.3 0 0 1 1-7.6Z" fill="#07101a" />
+  <path d="M46.2 20.2c1 2.4 1.3 5.1 1 7.6l-6.3 1.7-4.7-6.4 3.6-5.1 6.4 2.2Z" fill="#07101a" />
+  <path d="M22.8 38.2l1.4-6.8h7.1l3.4 6-4 5.3a17 17 0 0 1-7.9-4.5Z" fill="#07101a" />
+  <path d="M41.2 38.2a17 17 0 0 1-7.9 4.5l-4-5.3 3.4-6h7.1l1.4 6.8Z" fill="#07101a" />
+  <circle cx="32" cy="23" r="17" fill="none" stroke="#f4f5f7" stroke-width="2" opacity=".88" />
+</svg>

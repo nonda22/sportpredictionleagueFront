@@ -1,0 +1,349 @@
+
+> fifabet@0.0.0 start
+> ng serve --host 127.0.0.1 --port 4200
+
+> Building...
+√ Building...
+Initial chunk files | Names         |  Raw size
+main.js             | main          |  64.55 kB | 
+styles.css          | styles        | 467 bytes | 
+
+                    | Initial total |  65.02 kB
+
+Application bundle generation complete. [5.527 seconds] - 2026-05-25T05:28:55.699Z
+
+Watch mode enabled. Watching for file changes...
+NOTE: Raw file sizes do not reflect development server per-request transformations.
+  ➜  Local:   http://127.0.0.1:4200/
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 64.98 kB | 
+
+Application bundle generation complete. [2.196 seconds] - 2026-05-25T05:31:53.424Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 66.26 kB | 
+
+Application bundle generation complete. [1.050 seconds] - 2026-05-25T05:31:54.486Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 67.56 kB | 
+
+Application bundle generation complete. [1.049 seconds] - 2026-05-25T05:31:55.548Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 68.33 kB | 
+
+Application bundle generation complete. [1.365 seconds] - 2026-05-25T05:35:37.922Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 74.76 kB | 
+
+Application bundle generation complete. [2.105 seconds] - 2026-05-25T05:35:40.036Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 82.20 kB | 
+
+Application bundle generation complete. [1.486 seconds] - 2026-05-25T05:35:41.532Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names | Raw size
+main.js             | main  | 74.76 kB | 
+
+Application bundle generation complete. [1.579 seconds] - 2026-05-25T05:37:27.989Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  | Raw size
+styles.css          | styles |  3.58 kB | 
+
+Application bundle generation complete. [0.184 seconds] - 2026-05-25T05:37:28.181Z
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [1.728 seconds] - 2026-05-25T06:34:46.484Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names         | Raw size
+main.js             | main          | 78.90 kB | 
+styles.css          | styles        |  3.58 kB | 
+
+                    | Initial total | 82.48 kB
+
+Application bundle generation complete. [3.206 seconds] - 2026-05-25T06:34:50.316Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names  | Raw size
+styles.css          | styles |  4.52 kB | 
+
+Application bundle generation complete. [0.507 seconds] - 2026-05-25T06:34:51.203Z
+
+Stylesheet update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [2.677 seconds] - 2026-05-25T06:50:46.168Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [1.769 seconds] - 2026-05-25T06:50:47.982Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [1.327 seconds] - 2026-05-25T06:51:30.739Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names         |  Raw size
+main.js             | main          | 102.44 kB | 
+styles.css          | styles        |   4.44 kB | 
+
+                    | Initial total | 106.89 kB
+
+Application bundle generation complete. [3.419 seconds] - 2026-05-25T06:51:34.278Z
+
+Page reload sent to client(s).
+08:53:38 [vite] (client) ✨ new dependencies optimized: @angular/common
+08:53:38 [vite] (client) ✨ optimized dependencies changed. reloading
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 102.75 kB | 
+
+Application bundle generation complete. [0.927 seconds] - 2026-05-25T06:54:15.939Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 102.76 kB | 
+
+Application bundle generation complete. [1.233 seconds] - 2026-05-25T06:54:37.288Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 102.44 kB | 
+
+Application bundle generation complete. [1.068 seconds] - 2026-05-25T06:55:46.807Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 102.81 kB | 
+
+Application bundle generation complete. [0.571 seconds] - 2026-05-25T06:56:29.124Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 102.90 kB | 
+
+Application bundle generation complete. [0.563 seconds] - 2026-05-25T06:58:10.072Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 102.44 kB | 
+
+Application bundle generation complete. [0.896 seconds] - 2026-05-25T06:59:01.582Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [6.299 seconds] - 2026-05-25T07:05:40.939Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names         |  Raw size
+main.js             | main          | 130.25 kB | 
+styles.css          | styles        |   4.44 kB | 
+
+                    | Initial total | 134.69 kB
+
+Application bundle generation complete. [1.086 seconds] - 2026-05-25T07:05:42.054Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.873 seconds] - 2026-05-25T07:06:12.107Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.633 seconds] - 2026-05-25T07:06:12.745Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.706 seconds] - 2026-05-25T07:06:13.586Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.626 seconds] - 2026-05-25T07:06:14.534Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [0.610 seconds] - 2026-05-25T07:06:15.562Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [0.002 seconds] - 2026-05-25T07:06:15.802Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [0.114 seconds] - 2026-05-25T07:06:16.498Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names         |  Raw size
+main.js             | main          | 116.58 kB | 
+styles.css          | styles        |   4.60 kB | 
+
+                    | Initial total | 121.17 kB
+
+Application bundle generation complete. [1.466 seconds] - 2026-05-25T07:45:29.601Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 116.75 kB | 
+
+Application bundle generation complete. [1.328 seconds] - 2026-05-25T07:45:48.185Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 116.77 kB | 
+
+Application bundle generation complete. [2.144 seconds] - 2026-05-25T07:45:50.341Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.013 seconds] - 2026-05-25T07:57:11.175Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names         |  Raw size
+main.js             | main          | 116.77 kB | 
+styles.css          | styles        |   4.60 kB | 
+
+                    | Initial total | 121.36 kB
+
+Application bundle generation complete. [0.004 seconds] - 2026-05-25T07:58:25.458Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 116.76 kB | 
+
+Application bundle generation complete. [2.005 seconds] - 2026-05-25T07:59:08.382Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+
+No output file changes.
+
+Application bundle generation complete. [0.006 seconds] - 2026-05-25T07:59:59.789Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 116.76 kB | 
+
+Application bundle generation complete. [1.257 seconds] - 2026-05-25T08:00:32.184Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 116.76 kB | 
+
+Application bundle generation complete. [4.452 seconds] - 2026-05-25T08:00:51.313Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 116.76 kB | 
+
+Application bundle generation complete. [0.806 seconds] - 2026-05-25T08:00:54.366Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Application bundle generation failed. [1.645 seconds] - 2026-05-26T12:57:32.654Z
+
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names         |  Raw size
+main.js             | main          | 116.94 kB | 
+styles.css          | styles        |   4.60 kB | 
+
+                    | Initial total | 121.54 kB
+
+Application bundle generation complete. [0.783 seconds] - 2026-05-26T12:57:33.466Z
+
+Page reload sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 119.05 kB | 
+
+Application bundle generation complete. [1.616 seconds] - 2026-05-26T12:57:35.108Z
+
+Component update sent to client(s).
+> Changes detected. Rebuilding...
+√ Changes detected. Rebuilding...
+Initial chunk files | Names |  Raw size
+main.js             | main  | 120.34 kB | 
+
+Application bundle generation complete. [1.099 seconds] - 2026-05-26T12:57:36.229Z
+
+Component update sent to client(s).

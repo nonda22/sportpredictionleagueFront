@@ -1,0 +1,96 @@
+<section class="player-results" aria-labelledby="player-results-title">
+  <div class="player-results__hero">
+    <div>
+      <p class="eyebrow">Istorija rezultata</p>
+      <h2 id="player-results-title">{{ player.name }}</h2>
+    </div>
+
+    <div class="player-results__score">
+      <span>{{ player.points }}</span>
+      <small>ukupno poena</small>
+    </div>
+  </div>
+
+  <div class="player-results__stats" aria-label="Pregled igraca">
+    <div>
+      <span>Pozicija</span>
+      <strong>#{{ player.rank }}</strong>
+    </div>
+    <div>
+      <span>Ukupan broj pobeda</span>
+      <strong>{{ player.wins }}</strong>
+    </div>
+    <div>
+      <span>Poeni iz istorije</span>
+      <strong>{{ totalHistoryPoints() | number: '1.0-2' }}</strong>
+    </div>
+  </div>
+
+  <section class="player-results__teams" aria-labelledby="selected-teams-title">
+    <div class="player-results__section-title">
+      <p class="panel__label">Izabrani timovi</p>
+      <h3 id="selected-teams-title">4 tima</h3>
+    </div>
+
+    <div class="selected-teams">
+      @for (team of player.selectedTeams; track team; let index = $index) {
+        <span>Sesir {{ index + 1 }}: <strong>{{ team }}</strong></span>
+      }
+    </div>
+  </section>
+
+  <section class="player-results__history" aria-labelledby="history-title">
+    <div class="player-results__section-title">
+      <div>
+        <p class="panel__label">Mecevi</p>
+        <h3 id="history-title">Poeni po mecu</h3>
+      </div>
+
+      @if (contests().length > 1) {
+        <label class="contest-picker">
+          <span>Liga</span>
+          <select [value]="selectedContest()?.id ?? ''" (change)="selectContest($any($event.target).value)">
+            @for (contest of contests(); track contest.id) {
+              <option [value]="contest.id">{{ contest.name }}</option>
+            }
+          </select>
+        </label>
+      }
+    </div>
+
+    @if (isLoadingBreakdown()) {
+      <p class="player-results__message">Ucitavanje poena po mecu...</p>
+    } @else if (breakdownError()) {
+      <p class="player-results__message player-results__message--error">{{ breakdownError() }}</p>
+    } @else if (breakdown().length) {
+      <div class="history-table-wrap">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th scope="col">Datum</th>
+              <th scope="col">Mec</th>
+              <th scope="col">Izbor</th>
+              <th scope="col">Rezultat</th>
+              <th scope="col">Opis</th>
+              <th scope="col">Bodovi</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (entry of breakdown(); track entry.id ?? entry.eventId ?? entryMatch(entry)) {
+              <tr>
+                <td>{{ entryDate(entry) }}</td>
+                <td><strong>{{ entryMatch(entry) }}</strong></td>
+                <td>{{ entrySelection(entry) }}</td>
+                <td>{{ entry.result ?? '-' }}</td>
+                <td>{{ entry.outcome ?? entry.reason ?? '-' }}</td>
+                <td><strong>{{ entryPoints(entry) | number: '1.0-2' }}</strong></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="player-results__message">Nema upisanih poena za izabranu ligu.</p>
+    }
+  </section>
+</section>

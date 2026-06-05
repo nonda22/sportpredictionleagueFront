@@ -1,0 +1,229 @@
+<main class="login-shell">
+  <section class="brand-panel" aria-labelledby="page-title">
+    <img class="brand-logo" src="logo-bet-arena.png" alt="World Cup Bet Arena logo" />
+
+    <div class="brand-copy">
+      <p class="eyebrow">Sport prediction league</p>
+      <h1 id="page-title">World Cup <span>Bet Arena</span></h1>
+    </div>
+  </section>
+
+  <section class="auth-panel" aria-label="Authentication">
+    @if (page === 'login') {
+      <form class="login-card" (submit)="loginSubmit.emit($event)">
+        <div class="login-card__header">
+          <p class="eyebrow">Welcome back</p>
+          <h2>Login</h2>
+        </div>
+
+        <label class="field">
+          <span>Username</span>
+          <input type="text" name="username" autocomplete="username" placeholder="Username" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <span class="password-input">
+            <input
+              [type]="visiblePasswords().loginPassword ? 'text' : 'password'"
+              name="password"
+              autocomplete="current-password"
+              placeholder="Enter password"
+              required
+            />
+            <button
+              class="password-toggle"
+              type="button"
+              [attr.aria-label]="visiblePasswords().loginPassword ? 'Sakrij lozinku' : 'Prikazi lozinku'"
+              (click)="togglePasswordVisibility('loginPassword')"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                <circle cx="12" cy="12" r="3" />
+                @if (!visiblePasswords().loginPassword) {
+                  <path class="password-toggle__slash" d="M4 4l16 16" />
+                }
+              </svg>
+            </button>
+          </span>
+        </label>
+
+        <div class="login-options">
+          <label class="remember">
+            <input type="checkbox" name="remember" />
+            <span>Remember me</span>
+          </label>
+
+          <a href="/forgot-password" (click)="forgotPasswordClick.emit($event)">Forgot password?</a>
+        </div>
+
+        <button class="button button--primary" type="submit">Login</button>
+
+        @if (authMessage) {
+          <p class="form-message">{{ authMessage }}</p>
+        }
+
+        <div class="divider" aria-hidden="true">
+          <span></span>
+          <p>or</p>
+          <span></span>
+        </div>
+
+        <a class="button button--ghost" href="/create-account" (click)="createAccountClick.emit($event)">
+          Create account
+        </a>
+      </form>
+    }
+
+    @if (page === 'create-account') {
+      <form class="login-card login-card--wide" (submit)="createAccountSubmit.emit($event)">
+        <div class="login-card__header">
+          <p class="eyebrow">New player</p>
+          <h2>Create account</h2>
+        </div>
+
+        <div class="form-grid">
+          <label class="field">
+            <span>First name</span>
+            <input type="text" name="firstName" autocomplete="given-name" placeholder="Ivan" required />
+          </label>
+
+          <label class="field">
+            <span>Last name</span>
+            <input type="text" name="lastName" autocomplete="family-name" placeholder="Petrovic" required />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" autocomplete="email" placeholder="name@company.com" required />
+        </label>
+
+        <label class="field">
+          <span>Username</span>
+          <input type="text" name="username" autocomplete="username" placeholder="ivan" required />
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <span class="password-input">
+            <input
+              [type]="visiblePasswords().newPassword ? 'text' : 'password'"
+              name="password"
+              autocomplete="new-password"
+              minlength="8"
+              placeholder="Minimum 8 characters"
+              required
+            />
+            <button
+              class="password-toggle"
+              type="button"
+              [attr.aria-label]="visiblePasswords().newPassword ? 'Sakrij lozinku' : 'Prikazi lozinku'"
+              (click)="togglePasswordVisibility('newPassword')"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                <circle cx="12" cy="12" r="3" />
+                @if (!visiblePasswords().newPassword) {
+                  <path class="password-toggle__slash" d="M4 4l16 16" />
+                }
+              </svg>
+            </button>
+          </span>
+        </label>
+
+        <label class="field">
+          <span>Confirm password</span>
+          <span class="password-input">
+            <input
+              [type]="visiblePasswords().confirmPassword ? 'text' : 'password'"
+              name="confirmPassword"
+              autocomplete="new-password"
+              minlength="8"
+              placeholder="Repeat password"
+              required
+            />
+            <button
+              class="password-toggle"
+              type="button"
+              [attr.aria-label]="visiblePasswords().confirmPassword ? 'Sakrij lozinku' : 'Prikazi lozinku'"
+              (click)="togglePasswordVisibility('confirmPassword')"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+                <circle cx="12" cy="12" r="3" />
+                @if (!visiblePasswords().confirmPassword) {
+                  <path class="password-toggle__slash" d="M4 4l16 16" />
+                }
+              </svg>
+            </button>
+          </span>
+        </label>
+
+        <label class="remember remember--terms">
+          <input type="checkbox" name="terms" required />
+          <span>I accept league rules and account terms</span>
+        </label>
+
+        <button class="button button--primary" type="submit">Create account</button>
+
+        @if (authMessage) {
+          <p class="form-message">{{ authMessage }}</p>
+        }
+
+        <p class="form-footer">
+          Already have an account?
+          <a href="/login" (click)="loginClick.emit($event)">Login</a>
+        </p>
+      </form>
+    }
+
+    @if (page === 'forgot-password') {
+      <form class="login-card" (submit)="passwordResetSubmit.emit($event)">
+        <div class="login-card__header">
+          <p class="eyebrow">Account recovery</p>
+          <h2>Forgot password</h2>
+        </div>
+
+        <p class="form-note">Enter your account email and the reset flow can be connected when the backend is ready.</p>
+
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" autocomplete="email" placeholder="name@company.com" required />
+        </label>
+
+        <button class="button button--primary" type="submit">Send reset link</button>
+
+        @if (authMessage) {
+          <p class="form-message">{{ authMessage }}</p>
+        }
+
+        <p class="form-footer">
+          Remembered your password?
+          <a href="/login" (click)="loginClick.emit($event)">Back to login</a>
+        </p>
+      </form>
+    }
+
+    @if (page === 'email-verified') {
+      <section class="login-card verification-card">
+        <div class="verification-mark" aria-hidden="true">✓</div>
+
+        <div class="login-card__header">
+          <p class="eyebrow">Email verified</p>
+          <h2>Uspesno ste verifikovali email adresu</h2>
+        </div>
+
+        <p class="form-note">
+          Vasa email adresa je potvrdjena. Mozete nastaviti prijavu na svoj nalog.
+        </p>
+
+        @if (authMessage) {
+          <p class="form-message">{{ authMessage }}</p>
+        }
+
+        <a class="button button--primary" href="/login" (click)="loginClick.emit($event)">Login</a>
+      </section>
+    }
+  </section>
+</main>
