@@ -61,6 +61,49 @@
   font: inherit;
 }
 
+.lucky-pick {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  color: var(--gold-light);
+  font-weight: 800;
+}
+
+.lucky-pick__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid rgba(232, 185, 70, 0.72);
+  border-radius: 6px;
+  color: var(--text-primary);
+  background: rgba(217, 165, 49, 0.14);
+  font: inherit;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.lucky-pick__button svg {
+  width: 19px;
+  height: 19px;
+  fill: currentColor;
+}
+
+.lucky-pick__button:hover {
+  border-color: var(--gold);
+  background: rgba(217, 165, 49, 0.22);
+}
+
+.lucky-pick__button:disabled {
+  color: rgba(197, 199, 204, 0.62);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: not-allowed;
+}
+
 .pot {
   min-width: 0;
   border: 1px solid rgba(232, 185, 70, 0.28);
@@ -206,6 +249,11 @@
 }
 
 @media (max-width: 640px) {
+  .lucky-pick {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
   .team-selection__grid,
   .selection-summary div {
     grid-template-columns: 1fr;

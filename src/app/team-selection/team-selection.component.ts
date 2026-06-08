@@ -27,6 +27,7 @@ export class TeamSelectionComponent implements OnInit {
   protected readonly loadError = signal('');
   protected readonly selectedTeams = signal<Record<number, boolean>>({});
   protected readonly hasExistingSelection = signal(false);
+  protected readonly hasUsedLuckyPick = signal(false);
   protected readonly maxSelections = computed(() => this.selectedContest()?.maxSelections ?? 0);
   protected readonly selectedTeamNames = computed(() => {
     const names: string[] = [];
@@ -72,6 +73,37 @@ export class TeamSelectionComponent implements OnInit {
 
       return next;
     });
+  }
+
+  protected useLuckyPick(): void {
+    const contest = this.selectedContest();
+
+    if (!contest || this.hasUsedLuckyPick()) {
+      return;
+    }
+
+    const confirmed = window.confirm('Da li ste sigurni? Imate samo jedan pokusaj. Okusajte srecu :)');
+
+    if (!confirmed) {
+      return;
+    }
+
+    const luckyTeams = this.pickRandomTeamFromEachPot();
+
+    if (luckyTeams.length !== this.maxSelections()) {
+      this.saveMessage.set('Random izbor nije moguc za ovu ligu.');
+      return;
+    }
+
+    const selected = luckyTeams.reduce<Record<number, boolean>>((current, team) => {
+      current[team.id] = true;
+      return current;
+    }, {});
+
+    this.selectedTeams.set(selected);
+    this.hasUsedLuckyPick.set(true);
+    this.saveLuckyPickUsage(contest);
+    this.saveMessage.set('Sreca je odabrala timove. Mozete ih rucno izmeniti pre cuvanja.');
   }
 
   protected selectedCount(): number {
@@ -175,6 +207,7 @@ export class TeamSelectionComponent implements OnInit {
     this.isLoading.set(true);
     this.loadError.set('');
     this.saveMessage.set('');
+    this.hasUsedLuckyPick.set(this.readLuckyPickUsage(contest));
 
     this.loadContestData(contest).subscribe({
       next: ({ teams, selections }) => this.applyContestData(teams, selections),
@@ -203,6 +236,7 @@ export class TeamSelectionComponent implements OnInit {
     this.pots.set(pots);
     this.selectedTeams.set(this.mapSelectionsToTeamIds(selectedSelection));
     this.hasExistingSelection.set(Boolean(selectedSelection));
+    this.hasUsedLuckyPick.set(contest ? this.readLuckyPickUsage(contest) : false);
     this.isLoading.set(false);
   }
 
@@ -239,6 +273,25 @@ export class TeamSelectionComponent implements OnInit {
     }
 
     return selected;
+  }
+
+  private pickRandomTeamFromEachPot(): CompetitorDto[] {
+    return this.pots()
+      .slice(0, this.maxSelections())
+      .map((pot) => pot.teams[Math.floor(Math.random() * pot.teams.length)])
+      .filter((team): team is CompetitorDto => Boolean(team));
+  }
+
+  private saveLuckyPickUsage(contest: ContestDto): void {
+    localStorage.setItem(this.luckyPickStorageKey(contest), 'true');
+  }
+
+  private readLuckyPickUsage(contest: ContestDto): boolean {
+    return localStorage.getItem(this.luckyPickStorageKey(contest)) === 'true';
+  }
+
+  private luckyPickStorageKey(contest: ContestDto): string {
+    return `fifabet:lucky-pick:${this.contestId(contest)}`;
   }
 
   private findInitialContest(contests: ContestDto[]): ContestDto | null {

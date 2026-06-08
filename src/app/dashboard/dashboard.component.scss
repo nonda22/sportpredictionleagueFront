@@ -382,7 +382,19 @@
 .rank-badge svg {
   width: 18px;
   height: 18px;
-  fill: var(--gold-light);
+  fill: var(--rank-icon, var(--gold-light));
+}
+
+.rank-1 {
+  --rank-icon: #ffd766;
+}
+
+.rank-2 {
+  --rank-icon: #d8dde6;
+}
+
+.rank-3 {
+  --rank-icon: #c8864a;
 }
 
 .player-cell > span,
