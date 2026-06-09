@@ -81,8 +81,8 @@ export class App {
     this.navigateTo('dashboard');
   }
 
-  protected showTeamSelection(): void {
-    this.navigateTo('team-selection');
+  protected showTeamSelection(contestId?: number): void {
+    this.navigateTo('team-selection', false, contestId ? { contestId } : undefined);
   }
 
   protected showPlayerResults(player: LeaderboardEntryDto): void {
@@ -174,7 +174,7 @@ export class App {
     this.setDefaultAuthMessage(nextPage);
   }
 
-  private navigateTo(page: AppPage, replace = false): void {
+  private navigateTo(page: AppPage, replace = false, queryParams?: Record<string, string | number>): void {
     if (this.isPrivatePage(page) && !this.isAuthenticated()) {
       window.history.replaceState({}, '', '/login');
       this.page.set('login');
@@ -192,13 +192,20 @@ export class App {
       'player-results': `/igrac/${this.selectedPlayer()?.userId ?? ''}`,
     };
 
+    const queryString = queryParams ? `?${new URLSearchParams(this.stringifyQueryParams(queryParams)).toString()}` : '';
+    const url = `${pathByPage[page]}${queryString}`;
+
     if (replace) {
-      window.history.replaceState({}, '', pathByPage[page]);
+      window.history.replaceState({}, '', url);
     } else {
-      window.history.pushState({}, '', pathByPage[page]);
+      window.history.pushState({}, '', url);
     }
 
     this.page.set(page);
+  }
+
+  private stringifyQueryParams(queryParams: Record<string, string | number>): Record<string, string> {
+    return Object.fromEntries(Object.entries(queryParams).map(([key, value]) => [key, String(value)]));
   }
 
   private pageFromPath(): AppPage {

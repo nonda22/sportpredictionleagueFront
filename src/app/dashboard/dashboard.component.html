@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="dashboard-actions">
-      <button class="logout-button team-selection-link-button" type="button" [disabled]="!canSelectTeams()" (click)="teamSelectionClick.emit()">
+      <button class="logout-button team-selection-link-button" type="button" [disabled]="!canSelectTeams()" (click)="teamSelectionClick.emit(selectedContest()?.id)">
         Izaberi timove
       </button>
       <button class="logout-button logout-button--icon" type="button" aria-label="Logout" title="Logout" (click)="logoutClick.emit()">
@@ -50,6 +50,17 @@
         <p class="join-league-message">{{ joinContestMessage() }}</p>
       }
     </div>
+
+    @if (myContests().length > 1) {
+      <label class="contest-picker">
+        <span>Fantasy liga</span>
+        <select [value]="selectedContest()?.id ?? ''" (change)="selectContest($any($event.target).value)">
+          @for (contest of myContests(); track contestId(contest)) {
+            <option [value]="contestId(contest)">{{ contestName(contest) }}</option>
+          }
+        </select>
+      </label>
+    }
   </section>
 
   <div class="dashboard-tabs">

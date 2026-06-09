@@ -18,7 +18,7 @@ import { UserSelectionsService } from '../team-selection/user-selections.service
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  @Output() teamSelectionClick = new EventEmitter<void>();
+  @Output() teamSelectionClick = new EventEmitter<number | undefined>();
   @Output() logoutClick = new EventEmitter<void>();
   @Output() playerClick = new EventEmitter<LeaderboardEntryDto>();
 
@@ -188,6 +188,25 @@ export class DashboardComponent {
     this.playerClick.emit(player);
   }
 
+  protected contestId(contest: ContestDto): number {
+    return contest.id;
+  }
+
+  protected contestName(contest: ContestDto): string {
+    return contest.name;
+  }
+
+  protected selectContest(contestId: string): void {
+    const parsedContestId = Number(contestId);
+    const contest = this.myContests().find((item) => this.contestId(item) === parsedContestId);
+
+    if (!contest || this.selectedContest()?.id === contest.id) {
+      return;
+    }
+
+    this.loadContest(contest);
+  }
+
   protected joinContest(event: SubmitEvent): void {
     event.preventDefault();
     this.joinContestMessage.set('');
@@ -235,10 +254,7 @@ export class DashboardComponent {
           return;
         }
 
-        this.selectedContest.set(contest);
-        this.loadLeaderboard(contest.id);
-        this.loadScoringBreakdown(contest.id);
-        this.loadUserSelection(contest.id);
+        this.loadContest(contest);
       },
       error: () => {
         this.myContests.set([]);
@@ -252,6 +268,13 @@ export class DashboardComponent {
         this.selectionMessage.set('Izbor timova nije ucitan. Pokusajte ponovo kasnije.');
       },
     });
+  }
+
+  private loadContest(contest: ContestDto): void {
+    this.selectedContest.set(contest);
+    this.loadLeaderboard(contest.id);
+    this.loadScoringBreakdown(contest.id);
+    this.loadUserSelection(contest.id);
   }
 
   private loadLeaderboard(contestId: number): void {
@@ -303,9 +326,9 @@ export class DashboardComponent {
     this.userSelection.set(null);
     this.selectionItems.set([]);
 
-    this.userSelectionsService.getUserSelections().subscribe({
+    this.userSelectionsService.getUserSelections(contestId).subscribe({
       next: (selections) => {
-        const selection = selections.find((item) => item.contestId === contestId) ?? selections[0] ?? null;
+        const selection = selections[0] ?? null;
 
         this.userSelection.set(selection);
         this.selectionItems.set(selection?.items ?? []);

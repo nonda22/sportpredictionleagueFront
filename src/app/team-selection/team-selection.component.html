@@ -23,7 +23,7 @@
     @if (contests().length > 1) {
       <label class="contest-picker">
         <span>Fantasy liga</span>
-        <select [value]="contestId(selectedContest()!)" (change)="selectContest($any($event.target).value)">
+        <select [value]="selectedContest()?.id ?? ''" (change)="selectContest($any($event.target).value)">
           @for (contest of contests(); track contestId(contest)) {
             <option [value]="contestId(contest)">{{ contestName(contest) }}</option>
           }

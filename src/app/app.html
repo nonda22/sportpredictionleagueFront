@@ -17,7 +17,7 @@
   />
 } @else if (page() === 'dashboard') {
   <app-dashboard
-    (teamSelectionClick)="showTeamSelection()"
+    (teamSelectionClick)="showTeamSelection($event)"
     (logoutClick)="logout()"
     (playerClick)="showPlayerResults($event)"
   />

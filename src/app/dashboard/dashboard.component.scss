@@ -101,6 +101,10 @@
 }
 
 .dashboard-overview {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
   max-width: 1180px;
   margin: 0 auto 12px;
 }
@@ -205,6 +209,37 @@
   color: var(--gold-light);
   font-weight: 800;
   line-height: 1.35;
+}
+
+.contest-picker {
+  display: grid;
+  gap: 8px;
+  min-width: min(360px, 100%);
+  margin-left: auto;
+}
+
+.contest-picker span {
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.contest-picker select {
+  min-height: 42px;
+  padding: 0 38px 0 12px;
+  border: 1px solid rgba(232, 185, 70, 0.46);
+  border-radius: 6px;
+  color: var(--silver);
+  background: rgba(0, 0, 0, 0.42);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.contest-picker select:focus {
+  border-color: var(--gold-light);
+  outline: none;
 }
 
 .dashboard-tabs {
@@ -516,6 +551,15 @@
 }
 
 @media (max-width: 900px) {
+  .dashboard-overview {
+    display: grid;
+  }
+
+  .contest-picker {
+    width: 100%;
+    margin-left: 0;
+  }
+
   .dashboard-tab-list {
     display: flex;
     width: 100%;

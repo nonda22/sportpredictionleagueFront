@@ -147,10 +147,9 @@ export class TeamSelectionComponent implements OnInit {
   }
 
   protected selectContest(contestId: string): void {
-    const parsedContestId = Number(contestId);
-    const contest = this.contests().find((item) => this.contestId(item) === parsedContestId);
+    const contest = this.contests().find((item) => String(this.contestId(item)) === contestId);
 
-    if (!contest) {
+    if (!contest || this.selectedContest()?.id === contest.id) {
       return;
     }
 
@@ -231,7 +230,9 @@ export class TeamSelectionComponent implements OnInit {
     this.isLoading.set(true);
     this.loadError.set('');
     this.saveMessage.set('');
+    this.selectedTeams.set({});
     this.hasUsedLuckyPick.set(this.readLuckyPickUsage(contest));
+    this.updateContestQueryParam(contest);
 
     this.loadContestData(contest).subscribe({
       next: ({ teams, selections }) => this.applyContestData(teams, selections),
@@ -246,7 +247,7 @@ export class TeamSelectionComponent implements OnInit {
     return forkJoin({
       teams: this.teamsService.getCompetitors(contest.competitionId),
       selections: this.userSelectionsService
-        .getUserSelections()
+        .getUserSelections(this.contestId(contest))
         .pipe(catchError(() => of([] as UserSelectionDto[]))),
     });
   }
@@ -254,7 +255,7 @@ export class TeamSelectionComponent implements OnInit {
   private applyContestData(teams: CompetitorDto[], selections: UserSelectionDto[]): void {
     const contest = this.selectedContest();
     const contestId = contest ? this.contestId(contest) : 0;
-    const selectedSelection = selections.find((selection) => selection.contestId === contestId);
+    const selectedSelection = selections.find((selection) => selection.contestId === contestId) ?? selections[0];
     const pots = this.groupTeams(teams);
 
     this.pots.set(pots);
@@ -340,6 +341,12 @@ export class TeamSelectionComponent implements OnInit {
     const parsedContestId = Number(contestId);
 
     return Number.isInteger(parsedContestId) && parsedContestId > 0 ? parsedContestId : null;
+  }
+
+  private updateContestQueryParam(contest: ContestDto): void {
+    const params = new URLSearchParams(window.location.search);
+    params.set('contestId', String(this.contestId(contest)));
+    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
   }
 
   private isSelectionFull(): boolean {
