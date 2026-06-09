@@ -79,14 +79,89 @@
   background: linear-gradient(180deg, var(--gold-light), var(--gold));
 }
 
+.logout-button--icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  padding: 0;
+}
+
+.logout-button--icon svg {
+  width: 21px;
+  height: 21px;
+  fill: currentColor;
+}
+
 @media (max-width: 900px) {
   .dashboard-header {
     align-items: flex-start;
-    flex-direction: column;
   }
 
   .dashboard-actions {
-    width: 100%;
+    flex: 0 0 auto;
     flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-left: auto;
+  }
+
+  .dashboard-brand {
+    min-width: 0;
+  }
+
+  .dashboard-brand img {
+    width: 72px;
+  }
+
+  .dashboard-brand h1 {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .dashboard-shell {
+    padding: 18px;
+  }
+
+  .dashboard-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+  }
+
+  .dashboard-brand {
+    gap: 12px;
+  }
+
+  .dashboard-brand img {
+    width: 56px;
+  }
+
+  .eyebrow {
+    font-size: 0.68rem;
+    line-height: 1.2;
+  }
+
+  .dashboard-brand h1 {
+    font-size: 1.75rem;
+  }
+
+  .dashboard-actions .logout-button:not(.logout-button--icon) {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 0.76rem;
+    justify-self: start;
+  }
+
+  .logout-button--icon {
+    grid-column: 2;
+    grid-row: 1;
+    width: 40px;
+    min-height: 40px;
+  }
+
+  .dashboard-actions {
+    display: contents;
   }
 }

@@ -1,67 +1,55 @@
 <main class="dashboard-shell">
   <header class="dashboard-header">
     <div class="dashboard-brand">
-      <img src="logo-bet-arena.png" alt="World Cup Bet Arena logo" />
+      <img src="logo-bet-arena.png" alt="Bet Arena logo" />
       <div>
         <p class="eyebrow">Sport prediction league</p>
         <h1>Dashboard</h1>
       </div>
     </div>
     <div class="dashboard-actions">
-      <button class="logout-button" type="button" [disabled]="!canSelectTeams()" (click)="teamSelectionClick.emit()">
+      <button class="logout-button team-selection-link-button" type="button" [disabled]="!canSelectTeams()" (click)="teamSelectionClick.emit()">
         Izaberi timove
       </button>
-      <button class="logout-button" type="button" (click)="logoutClick.emit()">Logout</button>
+      <button class="logout-button logout-button--icon" type="button" aria-label="Logout" title="Logout" (click)="logoutClick.emit()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10 4h9v16h-9v-2h7V6h-7V4Zm1.7 4.3 1.4 1.4-2.3 2.3H21v2H10.8l2.3 2.3-1.4 1.4L7 13l4.7-4.7ZM3 4h4v2H5v12h2v2H3V4Z" />
+        </svg>
+      </button>
     </div>
   </header>
 
   <section class="dashboard-overview" aria-label="Tournament overview">
-    <button
-      class="overview-toggle"
-      type="button"
-      [attr.aria-expanded]="showOverview()"
-      aria-controls="dashboard-overview-content"
-      (click)="toggleOverview()"
-    >
-      {{ showOverview() ? 'Sakrij dodatne informacije' : 'Prikazi dodatne informacije' }}
-    </button>
+    <div class="join-league-compact" [class.is-open]="showJoinLeague()">
+      <button
+        class="join-league-toggle"
+        type="button"
+        [attr.aria-expanded]="showJoinLeague()"
+        aria-controls="join-league-form"
+        (click)="toggleJoinLeague()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Zm0 2.3L6 8.7v6.6l6 3.4 6-3.4V8.7l-6-3.4Zm-1 5.7V8h2v3h3v2h-3v3h-2v-3H8v-2h3Z" />
+        </svg>
+        <span>Join league</span>
+      </button>
 
-    @if (showOverview()) {
-      <div class="dashboard-grid" id="dashboard-overview-content">
-        <article class="panel" id="matches">
-          <p class="panel__label">Next pick</p>
-          <h2>Serbia vs Brazil</h2>
-          <div class="match-line">
-            <span>2.45</span>
-            <span>3.20</span>
-            <span>1.92</span>
-          </div>
-        </article>
+      @if (showJoinLeague()) {
+        <form class="join-league-form" id="join-league-form" (submit)="joinContest($event)">
+          <label>
+            <span>Invite kod</span>
+            <input name="inviteCode" type="text" autocomplete="off" />
+          </label>
+          <button type="submit" [disabled]="isJoiningContest()">
+            {{ isJoiningContest() ? 'Slanje...' : 'Potvrdi' }}
+          </button>
+        </form>
+      }
 
-        <article class="panel panel--accent" id="leaderboard">
-          <p class="panel__label">Leader</p>
-          <h2>Ivan</h2>
-          <p class="panel__score">128 pts</p>
-        </article>
-
-        <article class="panel">
-          <p class="panel__label">Join league</p>
-          <h2>Kod lige</h2>
-          <form class="join-league-form" (submit)="joinContest($event)">
-            <label>
-              <span>Invite kod</span>
-              <input name="inviteCode" type="text" autocomplete="off" />
-            </label>
-            <button type="submit" [disabled]="isJoiningContest()">
-              {{ isJoiningContest() ? 'Slanje...' : 'Potvrdi' }}
-            </button>
-          </form>
-          @if (joinContestMessage()) {
-            <p class="join-league-message">{{ joinContestMessage() }}</p>
-          }
-        </article>
-      </div>
-    }
+      @if (joinContestMessage()) {
+        <p class="join-league-message">{{ joinContestMessage() }}</p>
+      }
+    </div>
   </section>
 
   <div class="dashboard-tabs">

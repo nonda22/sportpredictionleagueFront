@@ -104,6 +104,11 @@
   cursor: not-allowed;
 }
 
+.lucky-pick__button--secondary {
+  color: var(--gold-light);
+  background: rgba(255, 255, 255, 0.035);
+}
+
 .pot {
   min-width: 0;
   border: 1px solid rgba(232, 185, 70, 0.28);
@@ -159,7 +164,7 @@
 }
 
 .team-option:hover,
-.team-option:has(input:checked) {
+.team-option.is-selected {
   border-color: rgba(232, 185, 70, 0.42);
   color: var(--text-primary);
   background: rgba(217, 165, 49, 0.12);
@@ -252,6 +257,11 @@
   .lucky-pick {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .lucky-pick__button {
+    width: 100%;
+    justify-content: center;
   }
 
   .team-selection__grid,

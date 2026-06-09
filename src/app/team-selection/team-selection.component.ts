@@ -2,6 +2,7 @@ import { DecimalPipe } from '@angular/common';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { catchError, forkJoin, of, switchMap, tap } from 'rxjs';
 import type { CompetitorDto, ContestDto, UserSelectionDto } from '../models';
+import { WorldCupGroupsComponent } from '../world-cup-groups/world-cup-groups.component';
 import { ContestsService } from './contests.service';
 import { TeamsService } from './teams.service';
 import { UserSelectionsService } from './user-selections.service';
@@ -11,9 +12,11 @@ type TeamPot = {
   teams: CompetitorDto[];
 };
 
+const DEFAULT_MAX_SELECTIONS = 4;
+
 @Component({
   selector: 'app-team-selection',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, WorldCupGroupsComponent],
   templateUrl: './team-selection.component.html',
   styleUrl: './team-selection.component.scss',
 })
@@ -28,7 +31,8 @@ export class TeamSelectionComponent implements OnInit {
   protected readonly selectedTeams = signal<Record<number, boolean>>({});
   protected readonly hasExistingSelection = signal(false);
   protected readonly hasUsedLuckyPick = signal(false);
-  protected readonly maxSelections = computed(() => this.selectedContest()?.maxSelections ?? 0);
+  protected readonly showGroups = signal(false);
+  protected readonly maxSelections = computed(() => this.resolveMaxSelections());
   protected readonly selectedTeamNames = computed(() => {
     const names: string[] = [];
     const selected = this.selectedTeams();
@@ -62,8 +66,14 @@ export class TeamSelectionComponent implements OnInit {
       const next = { ...current };
 
       if (checked) {
-        if (this.selectedCount() >= this.maxSelections()) {
+        const pot = this.findTeamPot(team);
+
+        if (!pot || (!this.isTeamSelectedInPot(pot, current) && this.isSelectionFull())) {
           return current;
+        }
+
+        for (const potTeam of pot.teams) {
+          delete next[potTeam.id];
         }
 
         next[team.id] = true;
@@ -104,6 +114,20 @@ export class TeamSelectionComponent implements OnInit {
     this.hasUsedLuckyPick.set(true);
     this.saveLuckyPickUsage(contest);
     this.saveMessage.set('Sreca je odabrala timove. Mozete ih rucno izmeniti pre cuvanja.');
+  }
+
+  protected toggleGroups(): void {
+    this.showGroups.update((current) => !current);
+  }
+
+  protected isLuckyPickDisabled(): boolean {
+    return this.hasUsedLuckyPick() || this.maxSelections() <= 0 || potsSelectionLimit(this.pots()) < this.maxSelections() || this.isSaving();
+  }
+
+  protected isTeamDisabled(team: CompetitorDto): boolean {
+    const pot = this.findTeamPot(team);
+
+    return !this.selectedTeams()[team.id] && !pot?.teams.some((potTeam) => this.selectedTeams()[potTeam.id]) && this.isSelectionFull();
   }
 
   protected selectedCount(): number {
@@ -230,11 +254,11 @@ export class TeamSelectionComponent implements OnInit {
   private applyContestData(teams: CompetitorDto[], selections: UserSelectionDto[]): void {
     const contest = this.selectedContest();
     const contestId = contest ? this.contestId(contest) : 0;
-    const selectedSelection = selections.find((selection) => selection.contestId === contestId) ?? selections[0];
+    const selectedSelection = selections.find((selection) => selection.contestId === contestId);
     const pots = this.groupTeams(teams);
 
     this.pots.set(pots);
-    this.selectedTeams.set(this.mapSelectionsToTeamIds(selectedSelection));
+    this.selectedTeams.set(this.mapSelectionsToTeamIds(selectedSelection, pots));
     this.hasExistingSelection.set(Boolean(selectedSelection));
     this.hasUsedLuckyPick.set(contest ? this.readLuckyPickUsage(contest) : false);
     this.isLoading.set(false);
@@ -265,11 +289,16 @@ export class TeamSelectionComponent implements OnInit {
     return this.teamName(a).localeCompare(this.teamName(b));
   }
 
-  private mapSelectionsToTeamIds(selection?: UserSelectionDto): Record<number, boolean> {
+  private mapSelectionsToTeamIds(selection: UserSelectionDto | undefined, pots: TeamPot[]): Record<number, boolean> {
     const selected: Record<number, boolean> = {};
+    const selectedTeamIds = new Set((selection?.items ?? []).map((item) => item.competitorId));
 
-    for (const item of selection?.items ?? []) {
-      selected[item.competitorId] = true;
+    for (const pot of pots) {
+      const selectedTeam = pot.teams.find((team) => selectedTeamIds.has(team.id));
+
+      if (selectedTeam) {
+        selected[selectedTeam.id] = true;
+      }
     }
 
     return selected;
@@ -312,4 +341,35 @@ export class TeamSelectionComponent implements OnInit {
 
     return Number.isInteger(parsedContestId) && parsedContestId > 0 ? parsedContestId : null;
   }
+
+  private isSelectionFull(): boolean {
+    const maxSelections = this.maxSelections();
+
+    return maxSelections > 0 && this.selectedCount() >= maxSelections;
+  }
+
+  private resolveMaxSelections(): number {
+    const contest = this.selectedContest();
+    const rawMaxSelections = Number(contest?.maxSelections);
+
+    if (Number.isInteger(rawMaxSelections) && rawMaxSelections > 0) {
+      return rawMaxSelections;
+    }
+
+    const availablePots = potsSelectionLimit(this.pots());
+
+    return availablePots > 0 ? Math.min(DEFAULT_MAX_SELECTIONS, availablePots) : 0;
+  }
+
+  private findTeamPot(team: CompetitorDto): TeamPot | undefined {
+    return this.pots().find((pot) => pot.teams.some((potTeam) => potTeam.id === team.id));
+  }
+
+  private isTeamSelectedInPot(pot: TeamPot, selectedTeams: Record<number, boolean>): boolean {
+    return pot.teams.some((team) => selectedTeams[team.id]);
+  }
+}
+
+function potsSelectionLimit(pots: TeamPot[]): number {
+  return pots.filter((pot) => pot.teams.length > 0).length;
 }

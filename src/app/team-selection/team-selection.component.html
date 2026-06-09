@@ -1,6 +1,6 @@
 <section class="team-selection" aria-labelledby="team-selection-title">
   <div class="team-selection__intro">
-    <p class="eyebrow">World Cup Bet Arena</p>
+    <p class="eyebrow">Bet Arena</p>
     <h2 id="team-selection-title">Izaberi timove</h2>
     @if (selectedContest()) {
       <p>
@@ -8,7 +8,7 @@
         @if (selectedContest()!.competitionName) {
           <span> - {{ selectedContest()!.competitionName }}</span>
         }
-        <span> - izaberi {{ maxSelections() }} timova</span>
+        <span> - izaberi {{ maxSelections() }} tima</span>
       </p>
     } @else {
       <p>Ucitavanje fantasy liga...</p>
@@ -35,7 +35,7 @@
       <button
         class="lucky-pick__button"
         type="button"
-        [disabled]="hasUsedLuckyPick() || pots().length < maxSelections() || isSaving()"
+        [disabled]="isLuckyPickDisabled()"
         (click)="useLuckyPick()"
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -45,10 +45,22 @@
         </svg>
         I am feeling lucky
       </button>
+      <button class="lucky-pick__button lucky-pick__button--secondary" type="button" (click)="toggleGroups()">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M4 4h7v7H4V4Zm2 2v3h3V6H6Zm7-2h7v7h-7V4Zm2 2v3h3V6h-3ZM4 13h7v7H4v-7Zm2 2v3h3v-3H6Zm7-2h7v7h-7v-7Zm2 2v3h3v-3h-3Z"
+          />
+        </svg>
+        {{ showGroups() ? 'Sakrij grupe' : 'Grupe' }}
+      </button>
       @if (hasUsedLuckyPick()) {
         <span>Lucky izbor je vec iskoriscen.</span>
       }
     </div>
+
+    @if (showGroups()) {
+      <app-world-cup-groups />
+    }
 
     <div class="team-selection__grid">
       @for (pot of pots(); track pot.name) {
@@ -60,11 +72,11 @@
 
           <div class="pot__teams">
             @for (team of pot.teams; track team.id) {
-              <label class="team-option">
+              <label class="team-option" [class.is-selected]="selectedTeams()[team.id]">
                 <input
                   type="checkbox"
                   [checked]="selectedTeams()[team.id]"
-                  [disabled]="!selectedTeams()[team.id] && selectedCount() >= maxSelections()"
+                  [disabled]="isTeamDisabled(team)"
                   (change)="toggleTeam(team, $any($event.target).checked)"
                 />
                 <span>{{ teamName(team) }}</span>

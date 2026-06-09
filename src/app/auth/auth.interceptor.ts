@@ -1,6 +1,7 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
+import { API_BASE_URL } from '../api.config';
 import { AuthService } from './auth.service';
 
 const ACCESS_TOKEN_KEY = 'fifabet.accessToken';
@@ -8,9 +9,10 @@ const ACCESS_TOKEN_KEY = 'fifabet.accessToken';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+  const isApiRequest = req.url.startsWith(API_BASE_URL);
   const isAuthRequest = req.url.includes('/api/v1/auth/');
 
-  const request = accessToken && !isAuthRequest
+  const request = accessToken && isApiRequest && !isAuthRequest
     ? req.clone({
         setHeaders: {
           Authorization: `Bearer ${accessToken}`,
@@ -20,7 +22,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(request).pipe(
     catchError((error: unknown) => {
-      if (!(error instanceof HttpErrorResponse) || error.status !== 401 || isAuthRequest) {
+      if (!(error instanceof HttpErrorResponse) || error.status !== 401 || !isApiRequest || isAuthRequest) {
         return throwError(() => error);
       }
 

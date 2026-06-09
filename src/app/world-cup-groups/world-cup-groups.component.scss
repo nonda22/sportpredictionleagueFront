@@ -1,0 +1,147 @@
+.world-cup-groups {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid rgba(232, 185, 70, 0.34);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.world-cup-groups__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.world-cup-groups__header h3 {
+  margin: 6px 0 0;
+  color: var(--silver);
+  font-size: 1.65rem;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.world-cup-groups__header > span {
+  color: var(--gold-light);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.world-cup-groups__status {
+  margin: 0;
+  color: var(--gold-light);
+  font-weight: 800;
+}
+
+.world-cup-groups__status--error {
+  color: #ffb4a8;
+}
+
+.world-cup-groups__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.group-card {
+  min-width: 0;
+  border: 1px solid rgba(232, 185, 70, 0.24);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.035);
+  overflow: hidden;
+}
+
+.group-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(232, 185, 70, 0.16);
+}
+
+.group-card h4 {
+  margin: 0;
+  color: var(--silver);
+  font-size: 1.05rem;
+  text-transform: uppercase;
+}
+
+.group-card header span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid rgba(232, 185, 70, 0.34);
+  border-radius: 50%;
+  color: var(--gold-light);
+  font-weight: 900;
+}
+
+.group-card__teams {
+  display: grid;
+  gap: 2px;
+  padding: 8px;
+}
+
+.group-team {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 46px;
+  padding: 7px 8px;
+  border-radius: 6px;
+  color: var(--text-secondary);
+}
+
+.group-team:nth-child(odd) {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.group-team__flag {
+  flex: 0 0 auto;
+  width: 28px;
+  font-size: 1.35rem;
+  line-height: 1;
+  text-align: center;
+}
+
+.group-team div {
+  min-width: 0;
+}
+
+.group-team strong {
+  display: block;
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+
+.group-team small {
+  display: block;
+  margin-top: 2px;
+  color: var(--gold-light);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+@media (max-width: 1100px) {
+  .world-cup-groups__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .world-cup-groups {
+    padding: 14px;
+  }
+
+  .world-cup-groups__header {
+    flex-direction: column;
+  }
+
+  .world-cup-groups__grid {
+    grid-template-columns: 1fr;
+  }
+}

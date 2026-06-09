@@ -1,0 +1,40 @@
+<section class="world-cup-groups" aria-labelledby="world-cup-groups-title">
+  <div class="world-cup-groups__header">
+    <div>
+      <p class="eyebrow">World Cup 2026</p>
+      <h3 id="world-cup-groups-title">Grupe</h3>
+    </div>
+    @if (teams().length) {
+      <span>{{ teams().length }} timova</span>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <p class="world-cup-groups__status">Ucitavanje grupa...</p>
+  } @else if (loadError()) {
+    <p class="world-cup-groups__status world-cup-groups__status--error">{{ loadError() }}</p>
+  } @else {
+    <div class="world-cup-groups__grid">
+      @for (group of groups(); track group.name) {
+        <article class="group-card">
+          <header>
+            <h4>Grupa {{ group.name }}</h4>
+            <span>{{ group.teams.length }}</span>
+          </header>
+
+          <div class="group-card__teams">
+            @for (team of group.teams; track team.fifa_code) {
+              <div class="group-team">
+                <span class="group-team__flag" aria-hidden="true">{{ flagIcon(team) }}</span>
+                <div>
+                  <strong>{{ displayName(team) }}</strong>
+                  <small>{{ team.fifa_code }} - {{ team.confed }}</small>
+                </div>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>

@@ -39,7 +39,7 @@ export class DashboardComponent {
   protected readonly userSelection = signal<UserSelectionDto | null>(null);
   protected readonly selectionItems = signal<UserSelectionItemDto[]>([]);
   protected readonly selectionMessage = signal('');
-  protected readonly showOverview = signal(false);
+  protected readonly showJoinLeague = signal(false);
   protected readonly activeDashboardTab = signal<'leaderboard' | 'selection' | 'scoring'>('leaderboard');
   protected readonly canSelectTeams = computed(() => this.myContests().some((contest) => contest.status === 'OPEN'));
   protected readonly selectionPoints = computed(() => this.userSelection()?.points ?? 0);
@@ -57,12 +57,12 @@ export class DashboardComponent {
     this.loadMyContests();
   }
 
-  protected toggleOverview(): void {
-    this.showOverview.update((current) => !current);
-  }
-
   protected showDashboardTab(tab: 'leaderboard' | 'selection' | 'scoring'): void {
     this.activeDashboardTab.set(tab);
+  }
+
+  protected toggleJoinLeague(): void {
+    this.showJoinLeague.update((current) => !current);
   }
 
   protected entryPoints(entry: ScoreLedgerEntryDto): number {
