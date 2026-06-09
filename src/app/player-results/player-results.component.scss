@@ -116,19 +116,27 @@
 
 .contest-picker select {
   min-height: 42px;
+  padding: 0 12px;
   border: 1px solid rgba(232, 185, 70, 0.28);
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.36);
   color: var(--silver);
+  background: rgba(0, 0, 0, 0.36);
   font: inherit;
   font-weight: 800;
-  padding: 0 12px;
 }
 
 .player-results__message {
   margin: 0;
   color: var(--text-secondary);
   font-weight: 800;
+}
+
+.player-results__message--standalone {
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid rgba(232, 185, 70, 0.28);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .player-results__message--error {
@@ -186,33 +194,6 @@
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-}
-
-.outcome {
-  display: inline-flex;
-  min-width: 70px;
-  min-height: 30px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.outcome--pobeda {
-  color: var(--gold-light);
-  background: rgba(217, 165, 49, 0.1);
-}
-
-.outcome--remi {
-  color: var(--silver);
-  background: rgba(197, 199, 204, 0.1);
-}
-
-.outcome--poraz {
-  color: #ff9f9f;
-  background: rgba(255, 80, 80, 0.1);
 }
 
 @media (max-width: 760px) {

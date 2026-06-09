@@ -92,6 +92,37 @@
   fill: currentColor;
 }
 
+.global-loading {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(232, 185, 70, 0.42);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.72);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+}
+
+.global-loading__spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(232, 185, 70, 0.26);
+  border-top-color: var(--gold-light);
+  border-radius: 50%;
+  animation: global-loading-spin 0.76s linear infinite;
+}
+
+@keyframes global-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 900px) {
   .dashboard-header {
     align-items: flex-start;
@@ -159,6 +190,13 @@
     grid-row: 1;
     width: 40px;
     min-height: 40px;
+  }
+
+  .global-loading {
+    right: 12px;
+    bottom: 12px;
+    width: 38px;
+    height: 38px;
   }
 
   .dashboard-actions {

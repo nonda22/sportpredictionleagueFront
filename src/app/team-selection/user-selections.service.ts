@@ -14,6 +14,12 @@ export class UserSelectionsService {
     return this.http.get<UserSelectionDto[]>(`${API_BASE_URL}/user-selections`, options);
   }
 
+  getUserSelectionsByUserId(userId: number, contestId?: number): Observable<UserSelectionDto[]> {
+    const options = contestId ? { params: new HttpParams().set('contestId', contestId) } : undefined;
+
+    return this.http.get<UserSelectionDto[]>(`${API_BASE_URL}/user-selections/users/${userId}`, options);
+  }
+
   saveSelection(request: SaveUserSelectionRequestDto): Observable<void> {
     return this.http.post<void>(`${API_BASE_URL}/user-selections`, request);
   }

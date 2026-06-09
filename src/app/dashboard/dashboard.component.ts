@@ -3,7 +3,6 @@ import type {
   ContestDto,
   LeaderboardEntryDto,
   EventParticipantDto,
-  PlayerStanding,
   ScoreLedgerEntryDto,
   ScorePairDto,
   UserSelectionDto,
@@ -19,11 +18,9 @@ import { UserSelectionsService } from '../team-selection/user-selections.service
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  @Input({ required: true }) playerStandings: PlayerStanding[] = [];
-
   @Output() teamSelectionClick = new EventEmitter<void>();
   @Output() logoutClick = new EventEmitter<void>();
-  @Output() playerClick = new EventEmitter<PlayerStanding>();
+  @Output() playerClick = new EventEmitter<LeaderboardEntryDto>();
 
   protected readonly isJoiningContest = signal(false);
   protected readonly joinContestMessage = signal('');
@@ -188,15 +185,7 @@ export class DashboardComponent {
   }
 
   protected openPlayerResults(player: LeaderboardEntryDto): void {
-    this.playerClick.emit({
-      rank: player.rank,
-      name: player.name || player.username,
-      points: player.points,
-      wins: 0,
-      trend: '',
-      selectedTeams: [],
-      history: [],
-    });
+    this.playerClick.emit(player);
   }
 
   protected joinContest(event: SubmitEvent): void {

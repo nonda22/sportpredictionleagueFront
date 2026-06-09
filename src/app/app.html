@@ -1,4 +1,10 @@
-@if (page() === 'login' || page() === 'create-account' || page() === 'forgot-password' || page() === 'email-verified') {
+@if (
+  page() === 'login' ||
+  page() === 'create-account' ||
+  page() === 'forgot-password' ||
+  page() === 'successful-registration' ||
+  page() === 'email-verified'
+) {
   <app-auth
     [page]="page()"
     [authMessage]="authMessage()"
@@ -11,7 +17,6 @@
   />
 } @else if (page() === 'dashboard') {
   <app-dashboard
-    [playerStandings]="playerStandings"
     (teamSelectionClick)="showTeamSelection()"
     (logoutClick)="logout()"
     (playerClick)="showPlayerResults($event)"
@@ -58,6 +63,19 @@
       </div>
     </header>
 
-    <app-player-results [player]="selectedPlayer()" />
+    @if (selectedPlayer()) {
+      <app-player-results [player]="selectedPlayer()!" />
+    } @else {
+      <section class="missing-player">
+        <p>Podaci za igraca nisu ucitani. Vratite se na dashboard i izaberite igraca iz tabele.</p>
+        <button class="logout-button" type="button" (click)="showDashboard()">Dashboard</button>
+      </section>
+    }
   </main>
+}
+
+@if (loadingService.isLoading()) {
+  <div class="global-loading" role="status" aria-live="polite" aria-label="Ucitavanje">
+    <div class="global-loading__spinner" aria-hidden="true"></div>
+  </div>
 }

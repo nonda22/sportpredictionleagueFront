@@ -205,13 +205,13 @@
       </form>
     }
 
-    @if (page === 'email-verified') {
+    @if (page === 'email-verified' || page === 'successful-registration') {
       <section class="login-card verification-card">
         <div class="verification-mark" aria-hidden="true">✓</div>
 
         <div class="login-card__header">
           <p class="eyebrow">Email verified</p>
-          <h2>Uspesno ste verifikovali email adresu</h2>
+          <h2>Uspesno ste potvrdili registraciju</h2>
         </div>
 
         <p class="form-note">

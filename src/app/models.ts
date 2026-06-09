@@ -2,30 +2,11 @@ export type AppPage =
   | 'login'
   | 'create-account'
   | 'forgot-password'
+  | 'successful-registration'
   | 'email-verified'
   | 'dashboard'
   | 'team-selection'
   | 'player-results';
-
-export type MatchOutcome = 'pobeda' | 'remi' | 'poraz';
-
-export type PlayerMatch = {
-  date: string;
-  match: string;
-  odds: number;
-  result: string;
-  outcome: MatchOutcome;
-};
-
-export type PlayerStanding = {
-  rank: number;
-  name: string;
-  points: number;
-  wins: number;
-  trend: string;
-  selectedTeams: string[];
-  history: PlayerMatch[];
-};
 
 export type Sport = 'FOOTBALL' | 'BASKETBALL' | 'CS2' | 'F1' | 'MOTOGP';
 
@@ -106,6 +87,7 @@ export type ScoreLedgerEntryDto = {
   eventName?: string;
   matchName?: string;
   fixtureName?: string;
+  eventStartsAt?: string;
   homeCompetitorName?: string;
   awayCompetitorName?: string;
   competitorName?: string;

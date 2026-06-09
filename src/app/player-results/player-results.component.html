@@ -1,12 +1,12 @@
 <section class="player-results" aria-labelledby="player-results-title">
   <div class="player-results__hero">
     <div>
-      <p class="eyebrow">Istorija rezultata</p>
-      <h2 id="player-results-title">{{ player.name }}</h2>
+      <p class="eyebrow">Igrac</p>
+      <h2 id="player-results-title">{{ playerName() }}</h2>
     </div>
 
     <div class="player-results__score">
-      <span>{{ player.points }}</span>
+      <span>{{ player.points | number: '1.0-2' }}</span>
       <small>ukupno poena</small>
     </div>
   </div>
@@ -17,90 +17,94 @@
       <strong>#{{ player.rank }}</strong>
     </div>
     <div>
-      <span>Ukupan broj pobeda</span>
-      <strong>{{ player.wins }}</strong>
+      <span>Korisnik</span>
+      <strong>{{ player.username }}</strong>
     </div>
     <div>
-      <span>Poeni iz istorije</span>
-      <strong>{{ totalHistoryPoints() | number: '1.0-2' }}</strong>
+      <span>Poeni po mecu</span>
+      <strong>{{ totalBreakdownPoints() | number: '1.0-2' }}</strong>
     </div>
   </div>
 
-  <section class="player-results__teams" aria-labelledby="selected-teams-title">
-    <div class="player-results__section-title">
-      <p class="panel__label">Izabrani timovi</p>
-      <h3 id="selected-teams-title">4 tima</h3>
-    </div>
-
-    <div class="selected-teams">
-      @for (team of player.selectedTeams; track team; let index = $index) {
-        <span>Sesir {{ index + 1 }}: <strong>{{ team }}</strong></span>
-      }
-    </div>
-  </section>
-
-  <section class="player-results__history" aria-labelledby="history-title">
-    <div class="player-results__section-title">
-      <div>
-        <p class="panel__label">Mecevi</p>
-        <h3 id="history-title">Poeni po mecu</h3>
+  @if (isLoadingDetails()) {
+    <p class="player-results__message player-results__message--standalone">Ucitavanje detalja igraca...</p>
+  } @else if (detailsError()) {
+    <p class="player-results__message player-results__message--error player-results__message--standalone">{{ detailsError() }}</p>
+  } @else {
+    <section class="player-results__teams" aria-labelledby="selected-teams-title">
+      <div class="player-results__section-title">
+        <p class="panel__label">Izabrani timovi</p>
+        <h3 id="selected-teams-title">{{ userSelection()?.items?.length ?? 0 }} tima</h3>
       </div>
 
-      @if (contests().length > 1) {
-        <label class="contest-picker">
-          <span>Liga</span>
-          <select [value]="selectedContest()?.id ?? ''" (change)="selectContest($any($event.target).value)">
-            @for (contest of contests(); track contest.id) {
-              <option [value]="contest.id">{{ contest.name }}</option>
-            }
-          </select>
-        </label>
-      }
-    </div>
+      <div class="selected-teams">
+        @for (item of userSelection()?.items ?? []; track item.id; let index = $index) {
+          <span>Sesir {{ index + 1 }}: <strong>{{ item.competitorName }}</strong></span>
+        } @empty {
+          <span>Nema sacuvanih timova za izabranu ligu.</span>
+        }
+      </div>
+    </section>
 
-    @if (isLoadingBreakdown()) {
-      <p class="player-results__message">Ucitavanje poena po mecu...</p>
-    } @else if (breakdownError()) {
-      <p class="player-results__message player-results__message--error">{{ breakdownError() }}</p>
-    } @else if (breakdown().length) {
-      <div class="history-table-wrap">
-        <table class="history-table">
-          <thead>
-            <tr>
-              <th scope="col">Datum</th>
-              <th scope="col">Mec</th>
-              <th scope="col">Izbor</th>
-              <th scope="col">Rezultat</th>
-              <th scope="col">Opis</th>
-              <th scope="col">Bodovi</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (entry of breakdown(); track entry.id ?? entry.eventId ?? entryMatch(entry)) {
+    <section class="player-results__history" aria-labelledby="history-title">
+      <div class="player-results__section-title">
+        <div>
+          <p class="panel__label">Mecevi</p>
+          <h3 id="history-title">Poeni po mecu</h3>
+        </div>
+
+        @if (contests().length > 1) {
+          <label class="contest-picker">
+            <span>Liga</span>
+            <select [value]="selectedContest()?.id ?? ''" (change)="selectContest($any($event.target).value)">
+              @for (contest of contests(); track contest.id) {
+                <option [value]="contest.id">{{ contest.name }}</option>
+              }
+            </select>
+          </label>
+        }
+      </div>
+
+      @if (breakdown().length) {
+        <div class="history-table-wrap">
+          <table class="history-table">
+            <thead>
               <tr>
-                <td>{{ entryDate(entry) }}</td>
-                <td><strong>{{ entryMatch(entry) }}</strong></td>
-                <td>{{ entrySelection(entry) }}</td>
-                <td>
-                  @if (scoreRows(entry).length) {
-                    <div class="score-lines">
-                      @for (row of scoreRows(entry); track row.label) {
-                        <span><small>{{ row.label }}</small>{{ row.value }}</span>
-                      }
-                    </div>
-                  } @else {
-                    -
-                  }
-                </td>
-                <td>{{ entry.outcome ?? entry.reason ?? '-' }}</td>
-                <td><strong>{{ entryPoints(entry) | number: '1.0-2' }}</strong></td>
+                <th scope="col">Datum</th>
+                <th scope="col">Mec</th>
+                <th scope="col">Izbor</th>
+                <th scope="col">Rezultat</th>
+                <th scope="col">Opis</th>
+                <th scope="col">Bodovi</th>
               </tr>
-            }
-          </tbody>
-        </table>
-      </div>
-    } @else {
-      <p class="player-results__message">Nema upisanih poena za izabranu ligu.</p>
-    }
-  </section>
+            </thead>
+            <tbody>
+              @for (entry of breakdown(); track entry.id ?? entry.eventId ?? entryMatch(entry)) {
+                <tr>
+                  <td>{{ entryDate(entry) }}</td>
+                  <td><strong>{{ entryMatch(entry) }}</strong></td>
+                  <td>{{ entrySelection(entry) }}</td>
+                  <td>
+                    @if (scoreRows(entry).length) {
+                      <div class="score-lines">
+                        @for (row of scoreRows(entry); track row.label) {
+                          <span><small>{{ row.label }}</small>{{ row.value }}</span>
+                        }
+                      </div>
+                    } @else {
+                      -
+                    }
+                  </td>
+                  <td>{{ entry.outcome ?? entry.reason ?? '-' }}</td>
+                  <td><strong>{{ entryPoints(entry) | number: '1.0-2' }}</strong></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <p class="player-results__message">Nema upisanih poena za izabranu ligu.</p>
+      }
+    </section>
+  }
 </section>

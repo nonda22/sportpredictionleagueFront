@@ -13,4 +13,10 @@ export class ScoringService {
 
     return this.http.get<ScoreLedgerEntryDto[]>(`${API_BASE_URL}/scoring/my-breakdown`, options);
   }
+
+  getUserBreakdown(userId: number, contestId: number): Observable<ScoreLedgerEntryDto[]> {
+    const params = new HttpParams().set('contestId', contestId);
+
+    return this.http.get<ScoreLedgerEntryDto[]>(`${API_BASE_URL}/scoring/users/${userId}/breakdown`, { params });
+  }
 }

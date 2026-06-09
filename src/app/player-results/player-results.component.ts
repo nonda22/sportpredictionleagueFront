@@ -1,14 +1,10 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnInit, signal } from '@angular/core';
-import type { ContestDto, MatchOutcome, PlayerMatch, PlayerStanding, ScoreLedgerEntryDto, ScorePairDto } from '../models';
+import { forkJoin } from 'rxjs';
+import type { ContestDto, LeaderboardEntryDto, ScoreLedgerEntryDto, ScorePairDto, UserSelectionDto } from '../models';
 import { ScoringService } from '../scoring.service';
 import { ContestsService } from '../team-selection/contests.service';
-
-const outcomeMultiplier: Record<MatchOutcome, number> = {
-  pobeda: 3,
-  remi: 1,
-  poraz: 0,
-};
+import { UserSelectionsService } from '../team-selection/user-selections.service';
 
 @Component({
   selector: 'app-player-results',
@@ -17,35 +13,31 @@ const outcomeMultiplier: Record<MatchOutcome, number> = {
   styleUrl: './player-results.component.scss',
 })
 export class PlayerResultsComponent implements OnInit {
-  @Input({ required: true }) player!: PlayerStanding;
+  @Input({ required: true }) player!: LeaderboardEntryDto;
 
   protected readonly contests = signal<ContestDto[]>([]);
   protected readonly selectedContest = signal<ContestDto | null>(null);
+  protected readonly userSelection = signal<UserSelectionDto | null>(null);
   protected readonly breakdown = signal<ScoreLedgerEntryDto[]>([]);
-  protected readonly isLoadingBreakdown = signal(false);
-  protected readonly breakdownError = signal('');
+  protected readonly isLoadingDetails = signal(false);
+  protected readonly detailsError = signal('');
 
   constructor(
     private readonly contestsService: ContestsService,
-    private readonly scoringService: ScoringService
+    private readonly scoringService: ScoringService,
+    private readonly userSelectionsService: UserSelectionsService
   ) {}
 
   ngOnInit(): void {
     this.loadContests();
   }
 
-  protected pointsFor(match: PlayerMatch): number {
-    return match.odds * outcomeMultiplier[match.outcome];
+  protected playerName(): string {
+    return this.player.name || this.player.username;
   }
 
-  protected totalHistoryPoints(): number {
-    const breakdown = this.breakdown();
-
-    if (breakdown.length) {
-      return breakdown.reduce((total, entry) => total + this.entryPoints(entry), 0);
-    }
-
-    return this.player.history.reduce((total, match) => total + this.pointsFor(match), 0);
+  protected totalBreakdownPoints(): number {
+    return this.breakdown().reduce((total, entry) => total + this.entryPoints(entry), 0);
   }
 
   protected selectContest(contestId: string): void {
@@ -57,11 +49,11 @@ export class PlayerResultsComponent implements OnInit {
     }
 
     this.selectedContest.set(contest);
-    this.loadBreakdown(contest.id);
+    this.loadPlayerDetails(contest.id);
   }
 
   protected entryDate(entry: ScoreLedgerEntryDto): string {
-    const value = entry.eventDate ?? entry.eventStartTime ?? entry.calculatedAt;
+    const value = entry.eventDate ?? entry.eventStartTime ?? entry.eventStartsAt ?? entry.calculatedAt;
 
     if (!value) {
       return '-';
@@ -131,13 +123,9 @@ export class PlayerResultsComponent implements OnInit {
     return entry.points ?? entry.pointsDelta ?? entry.awardedPoints ?? 0;
   }
 
-  private formatScore(score: ScorePairDto): string {
-    return `${score.home}:${score.away}`;
-  }
-
   private loadContests(): void {
-    this.isLoadingBreakdown.set(true);
-    this.breakdownError.set('');
+    this.isLoadingDetails.set(true);
+    this.detailsError.set('');
 
     this.contestsService.getMyContests().subscribe({
       next: (contests) => {
@@ -147,33 +135,38 @@ export class PlayerResultsComponent implements OnInit {
         this.selectedContest.set(contest);
 
         if (!contest) {
-          this.isLoadingBreakdown.set(false);
-          this.breakdownError.set('Nema dostupnih fantasy liga.');
+          this.isLoadingDetails.set(false);
+          this.detailsError.set('Nema dostupnih fantasy liga.');
           return;
         }
 
-        this.loadBreakdown(contest.id);
+        this.loadPlayerDetails(contest.id);
       },
       error: () => {
-        this.isLoadingBreakdown.set(false);
-        this.breakdownError.set('Fantasy lige nisu ucitane. Pokusajte ponovo kasnije.');
+        this.isLoadingDetails.set(false);
+        this.detailsError.set('Fantasy lige nisu ucitane. Pokusajte ponovo kasnije.');
       },
     });
   }
 
-  private loadBreakdown(contestId: number): void {
-    this.isLoadingBreakdown.set(true);
-    this.breakdownError.set('');
+  private loadPlayerDetails(contestId: number): void {
+    this.isLoadingDetails.set(true);
+    this.detailsError.set('');
+    this.userSelection.set(null);
     this.breakdown.set([]);
 
-    this.scoringService.getMyBreakdown(contestId).subscribe({
-      next: (breakdown) => {
+    forkJoin({
+      selections: this.userSelectionsService.getUserSelectionsByUserId(this.player.userId, contestId),
+      breakdown: this.scoringService.getUserBreakdown(this.player.userId, contestId),
+    }).subscribe({
+      next: ({ selections, breakdown }) => {
+        this.userSelection.set(selections.find((selection) => selection.contestId === contestId) ?? selections[0] ?? null);
         this.breakdown.set(breakdown);
-        this.isLoadingBreakdown.set(false);
+        this.isLoadingDetails.set(false);
       },
       error: () => {
-        this.isLoadingBreakdown.set(false);
-        this.breakdownError.set('Poeni po mecu nisu ucitani. Pokusajte ponovo kasnije.');
+        this.isLoadingDetails.set(false);
+        this.detailsError.set('Detalji igraca nisu ucitani. Pokusajte ponovo kasnije.');
       },
     });
   }
@@ -191,5 +184,9 @@ export class PlayerResultsComponent implements OnInit {
     }
 
     return contests[0] ?? null;
+  }
+
+  private formatScore(score: ScorePairDto): string {
+    return `${score.home}:${score.away}`;
   }
 }

@@ -2,10 +2,11 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { authInterceptor } from './auth/auth.interceptor';
+import { loadingInterceptor } from './loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor]))
   ]
 };
