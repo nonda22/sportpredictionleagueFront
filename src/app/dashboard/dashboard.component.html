@@ -95,6 +95,16 @@
         Obracun
         <span>{{ scoringBreakdown().length }}</span>
       </button>
+      <button
+        type="button"
+        role="tab"
+        [class.is-active]="activeDashboardTab() === 'quiz'"
+        [attr.aria-selected]="activeDashboardTab() === 'quiz'"
+        (click)="showDashboardTab('quiz')"
+      >
+        Quiz
+        <span>{{ quizScore() }}/{{ quizQuestions.length }}</span>
+      </button>
     </div>
 
     @if (activeDashboardTab() === 'leaderboard') {
@@ -141,9 +151,9 @@
                 </td>
                 <td>
                   <div class="player-cell">
-                    <span>{{ (player.name || player.username).slice(0, 1) }}</span>
+                    <span>{{ displayUsername(player).slice(0, 1) }}</span>
                     <div>
-                      <strong>{{ player.name || player.username }}</strong>
+                      <strong>{{ displayUsername(player) }}</strong>
                     </div>
                   </div>
                 </td>
@@ -216,7 +226,7 @@
         </table>
       </div>
     </section>
-    } @else {
+    } @else if (activeDashboardTab() === 'scoring') {
     <section class="standings-panel scoring-panel" aria-labelledby="scoring-title">
       <div class="standings-panel__header">
         <div>
@@ -329,6 +339,53 @@
             }
           </tbody>
         </table>
+      </div>
+    </section>
+    } @else {
+    <section class="standings-panel quiz-panel" aria-labelledby="quiz-title">
+      <div class="standings-panel__header">
+        <div>
+          <p class="panel__label">Razonoda</p>
+          <h2 id="quiz-title">Sportski quiz</h2>
+        </div>
+        <span>{{ quizScore() }}/{{ quizQuestions.length }} tacno</span>
+      </div>
+
+      <div class="selection-summary quiz-summary">
+        <span>{{ quizAnsweredCount() }} od {{ quizQuestions.length }} odgovoreno</span>
+        <button class="join-league-toggle" type="button" (click)="resetQuiz()" [disabled]="quizAnsweredCount() === 0">Reset</button>
+      </div>
+
+      <div class="quiz-list">
+        @for (question of quizQuestions; track question.id) {
+          <article class="quiz-question">
+            <div class="quiz-question__text">
+              <span>{{ question.id }}</span>
+              <strong>{{ question.question }}</strong>
+            </div>
+
+            <div class="quiz-question__actions" role="group" [attr.aria-label]="'Odgovor za pitanje ' + question.id">
+              <button
+                type="button"
+                [class.is-selected]="quizAnswers()[question.id] === true"
+                (click)="answerQuiz(question, true)"
+              >
+                Da
+              </button>
+              <button
+                type="button"
+                [class.is-selected]="quizAnswers()[question.id] === false"
+                (click)="answerQuiz(question, false)"
+              >
+                Ne
+              </button>
+            </div>
+
+            @if (hasQuizAnswer(question)) {
+              <p>{{ isQuizAnswerCorrect(question) ? 'Tacno.' : 'Nije tacno.' }} {{ question.explanation }}</p>
+            }
+          </article>
+        }
       </div>
     </section>
     }

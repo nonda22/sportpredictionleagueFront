@@ -12,6 +12,15 @@ import { ScoringService } from '../scoring.service';
 import { ContestsService } from '../team-selection/contests.service';
 import { UserSelectionsService } from '../team-selection/user-selections.service';
 
+type DashboardTab = 'leaderboard' | 'selection' | 'scoring' | 'quiz';
+
+type QuizQuestion = {
+  id: number;
+  question: string;
+  answer: boolean;
+  explanation: string;
+};
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -20,8 +29,9 @@ import { UserSelectionsService } from '../team-selection/user-selections.service
 export class DashboardComponent {
   @Output() teamSelectionClick = new EventEmitter<number | undefined>();
   @Output() logoutClick = new EventEmitter<void>();
-  @Output() playerClick = new EventEmitter<LeaderboardEntryDto>();
+  @Output() playerClick = new EventEmitter<{ player: LeaderboardEntryDto; contestId?: number }>();
 
+  private readonly contestIdFromUrl = this.readContestId();
   protected readonly isJoiningContest = signal(false);
   protected readonly joinContestMessage = signal('');
   protected readonly isLoadingLeaderboard = signal(false);
@@ -37,11 +47,82 @@ export class DashboardComponent {
   protected readonly selectionItems = signal<UserSelectionItemDto[]>([]);
   protected readonly selectionMessage = signal('');
   protected readonly showJoinLeague = signal(false);
-  protected readonly activeDashboardTab = signal<'leaderboard' | 'selection' | 'scoring'>('leaderboard');
+  protected readonly activeDashboardTab = signal<DashboardTab>('leaderboard');
+  protected readonly quizAnswers = signal<Record<number, boolean>>({});
+  protected readonly quizQuestions: QuizQuestion[] = [
+    {
+      id: 1,
+      question: 'Da li je golman ikada dao gol glavom u Premijer ligi?',
+      answer: true,
+      explanation: 'Da. Alisson Becker je 2021. dao gol glavom za Liverpool protiv West Brom-a.',
+    },
+    {
+      id: 2,
+      question: 'Da li se Formula 1 trka ikada vozila u Monaku?',
+      answer: true,
+      explanation: 'Da. Monako je jedna od najpoznatijih trka u F1 kalendaru.',
+    },
+    {
+      id: 3,
+      question: 'Da li košarkaški tim sme da ima šest igrača na parketu tokom igre?',
+      answer: false,
+      explanation: 'Ne. U regularnoj igri tim ima pet igrača na terenu.',
+    },
+    {
+      id: 4,
+      question: 'Da li je fudbalski meč moguće završiti rezultatom 0:0?',
+      answer: true,
+      explanation: 'Da. Ako nema golova do kraja utakmice, rezultat je 0:0.',
+    },
+    {
+      id: 5,
+      question: 'Da li u tenisu rezultat 40:40 zovemo deuce?',
+      answer: true,
+      explanation: 'Da. Na 40:40 se igra na prednost.',
+    },
+    {
+      id: 6,
+      question: 'Da li žuti karton u fudbalu znači automatsko isključenje?',
+      answer: false,
+      explanation: 'Ne. Isključenje dolazi posle crvenog kartona ili drugog žutog.',
+    },
+    {
+      id: 7,
+      question: 'Da li maraton ima dužinu veću od 40 kilometara?',
+      answer: true,
+      explanation: 'Da. Maraton je dug 42,195 kilometara.',
+    },
+    {
+      id: 8,
+      question: 'Da li se u odbojci sme igrati nogom?',
+      answer: true,
+      explanation: 'Da. Lopta sme da se odigra bilo kojim delom tela.',
+    },
+    {
+      id: 9,
+      question: 'Da li u boksu runda obično traje 10 minuta?',
+      answer: false,
+      explanation: 'Ne. Profesionalne runde najčešće traju 3 minuta.',
+    },
+    {
+      id: 10,
+      question: 'Da li u MotoGP-u vozači menjaju gume u pit stopu kao u F1?',
+      answer: false,
+      explanation: 'Ne u standardnom toku trke. U MotoGP-u se kod promene uslova uglavnom menja motor.',
+    },
+  ];
   protected readonly canSelectTeams = computed(() => this.myContests().some((contest) => contest.status === 'OPEN'));
   protected readonly selectionPoints = computed(() => this.userSelection()?.points ?? 0);
   protected readonly scoringPoints = computed(() =>
     this.scoringBreakdown().reduce((total, entry) => total + this.entryPoints(entry), 0)
+  );
+  protected readonly quizAnsweredCount = computed(() => Object.keys(this.quizAnswers()).length);
+  protected readonly quizScore = computed(() =>
+    this.quizQuestions.reduce((score, question) => {
+      const answer = this.quizAnswers()[question.id];
+
+      return answer === question.answer ? score + 1 : score;
+    }, 0)
   );
 
   constructor(
@@ -54,8 +135,24 @@ export class DashboardComponent {
     this.loadMyContests();
   }
 
-  protected showDashboardTab(tab: 'leaderboard' | 'selection' | 'scoring'): void {
+  protected showDashboardTab(tab: DashboardTab): void {
     this.activeDashboardTab.set(tab);
+  }
+
+  protected answerQuiz(question: QuizQuestion, answer: boolean): void {
+    this.quizAnswers.update((current) => ({ ...current, [question.id]: answer }));
+  }
+
+  protected isQuizAnswerCorrect(question: QuizQuestion): boolean {
+    return this.quizAnswers()[question.id] === question.answer;
+  }
+
+  protected hasQuizAnswer(question: QuizQuestion): boolean {
+    return this.quizAnswers()[question.id] !== undefined;
+  }
+
+  protected resetQuiz(): void {
+    this.quizAnswers.set({});
   }
 
   protected toggleJoinLeague(): void {
@@ -185,7 +282,7 @@ export class DashboardComponent {
   }
 
   protected openPlayerResults(player: LeaderboardEntryDto): void {
-    this.playerClick.emit(player);
+    this.playerClick.emit({ player, contestId: this.selectedContest()?.id });
   }
 
   protected contestId(contest: ContestDto): number {
@@ -194,6 +291,10 @@ export class DashboardComponent {
 
   protected contestName(contest: ContestDto): string {
     return contest.name;
+  }
+
+  protected displayUsername(player: LeaderboardEntryDto): string {
+    return player.username.split('@')[0] || player.username;
   }
 
   protected selectContest(contestId: string): void {
@@ -240,7 +341,7 @@ export class DashboardComponent {
       next: (contests) => {
         this.myContests.set(contests);
 
-        const contest = contests[0];
+        const contest = this.findInitialContest(contests);
 
         if (!contest) {
           this.selectedContest.set(null);
@@ -272,9 +373,35 @@ export class DashboardComponent {
 
   private loadContest(contest: ContestDto): void {
     this.selectedContest.set(contest);
+    this.updateContestQueryParam(contest);
     this.loadLeaderboard(contest.id);
     this.loadScoringBreakdown(contest.id);
     this.loadUserSelection(contest.id);
+  }
+
+  private findInitialContest(contests: ContestDto[]): ContestDto | null {
+    if (this.contestIdFromUrl) {
+      const contestFromUrl = contests.find((contest) => this.contestId(contest) === this.contestIdFromUrl);
+
+      if (contestFromUrl) {
+        return contestFromUrl;
+      }
+    }
+
+    return contests[0] ?? null;
+  }
+
+  private readContestId(): number | null {
+    const contestId = new URLSearchParams(window.location.search).get('contestId');
+    const parsedContestId = Number(contestId);
+
+    return Number.isInteger(parsedContestId) && parsedContestId > 0 ? parsedContestId : null;
+  }
+
+  private updateContestQueryParam(contest: ContestDto): void {
+    const params = new URLSearchParams(window.location.search);
+    params.set('contestId', String(this.contestId(contest)));
+    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
   }
 
   private loadLeaderboard(contestId: number): void {

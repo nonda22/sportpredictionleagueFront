@@ -20,17 +20,6 @@
   } @else if (loadError()) {
     <p class="team-selection__status team-selection__status--error">{{ loadError() }}</p>
   } @else {
-    @if (contests().length > 1) {
-      <label class="contest-picker">
-        <span>Fantasy liga</span>
-        <select [value]="selectedContest()?.id ?? ''" (change)="selectContest($any($event.target).value)">
-          @for (contest of contests(); track contestId(contest)) {
-            <option [value]="contestId(contest)">{{ contestName(contest) }}</option>
-          }
-        </select>
-      </label>
-    }
-
     <div class="lucky-pick">
       <button
         class="lucky-pick__button"

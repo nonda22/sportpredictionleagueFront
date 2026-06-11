@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import type { ContestDto, LeaderboardEntryDto, ScoreLedgerEntryDto, ScorePairDto, UserSelectionDto } from '../models';
 import { ScoringService } from '../scoring.service';
@@ -12,9 +12,10 @@ import { UserSelectionsService } from '../team-selection/user-selections.service
   templateUrl: './player-results.component.html',
   styleUrl: './player-results.component.scss',
 })
-export class PlayerResultsComponent implements OnInit {
+export class PlayerResultsComponent implements OnChanges, OnInit {
   @Input({ required: true }) player!: LeaderboardEntryDto;
 
+  protected readonly displayedPlayer = signal<LeaderboardEntryDto | null>(null);
   protected readonly contests = signal<ContestDto[]>([]);
   protected readonly selectedContest = signal<ContestDto | null>(null);
   protected readonly userSelection = signal<UserSelectionDto | null>(null);
@@ -28,28 +29,19 @@ export class PlayerResultsComponent implements OnInit {
     private readonly userSelectionsService: UserSelectionsService
   ) {}
 
-  ngOnInit(): void {
-    this.loadContests();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['player']) {
+      this.displayedPlayer.set(this.player);
+    }
   }
 
-  protected playerName(): string {
-    return this.player.name || this.player.username;
+  ngOnInit(): void {
+    this.displayedPlayer.set(this.player);
+    this.loadContests();
   }
 
   protected totalBreakdownPoints(): number {
     return this.breakdown().reduce((total, entry) => total + this.entryPoints(entry), 0);
-  }
-
-  protected selectContest(contestId: string): void {
-    const parsedContestId = Number(contestId);
-    const contest = this.contests().find((item) => item.id === parsedContestId);
-
-    if (!contest) {
-      return;
-    }
-
-    this.selectedContest.set(contest);
-    this.loadPlayerDetails(contest.id);
   }
 
   protected entryDate(entry: ScoreLedgerEntryDto): string {
@@ -140,6 +132,7 @@ export class PlayerResultsComponent implements OnInit {
           return;
         }
 
+        this.updateContestQueryParam(contest);
         this.loadPlayerDetails(contest.id);
       },
       error: () => {
@@ -156,10 +149,14 @@ export class PlayerResultsComponent implements OnInit {
     this.breakdown.set([]);
 
     forkJoin({
+      leaderboard: this.contestsService.getLeaderboard(contestId),
       selections: this.userSelectionsService.getUserSelectionsByUserId(this.player.userId, contestId),
       breakdown: this.scoringService.getUserBreakdown(this.player.userId, contestId),
     }).subscribe({
-      next: ({ selections, breakdown }) => {
+      next: ({ leaderboard, selections, breakdown }) => {
+        const leaderboardPlayer = leaderboard.find((entry) => entry.userId === this.player.userId);
+
+        this.displayedPlayer.set(leaderboardPlayer ?? this.player);
         this.userSelection.set(selections.find((selection) => selection.contestId === contestId) ?? selections[0] ?? null);
         this.breakdown.set(breakdown);
         this.isLoadingDetails.set(false);
@@ -184,6 +181,12 @@ export class PlayerResultsComponent implements OnInit {
     }
 
     return contests[0] ?? null;
+  }
+
+  private updateContestQueryParam(contest: ContestDto): void {
+    const params = new URLSearchParams(window.location.search);
+    params.set('contestId', String(contest.id));
+    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
   }
 
   private formatScore(score: ScorePairDto): string {

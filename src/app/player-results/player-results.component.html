@@ -1,24 +1,12 @@
-<section class="player-results" aria-labelledby="player-results-title">
-  <div class="player-results__hero">
-    <div>
-      <p class="eyebrow">Igrac</p>
-      <h2 id="player-results-title">{{ playerName() }}</h2>
-    </div>
-
-    <div class="player-results__score">
-      <span>{{ player.points | number: '1.0-2' }}</span>
-      <small>ukupno poena</small>
-    </div>
-  </div>
-
+<section class="player-results" aria-label="Pregled igraca">
   <div class="player-results__stats" aria-label="Pregled igraca">
     <div>
       <span>Pozicija</span>
-      <strong>#{{ player.rank }}</strong>
+      <strong>#{{ displayedPlayer()?.rank ?? player.rank }}</strong>
     </div>
     <div>
       <span>Korisnik</span>
-      <strong>{{ player.username }}</strong>
+      <strong>{{ displayedPlayer()?.username ?? player.username }}</strong>
     </div>
     <div>
       <span>Poeni po mecu</span>
@@ -52,17 +40,6 @@
           <p class="panel__label">Mecevi</p>
           <h3 id="history-title">Poeni po mecu</h3>
         </div>
-
-        @if (contests().length > 1) {
-          <label class="contest-picker">
-            <span>Liga</span>
-            <select [value]="selectedContest()?.id ?? ''" (change)="selectContest($any($event.target).value)">
-              @for (contest of contests(); track contest.id) {
-                <option [value]="contest.id">{{ contest.name }}</option>
-              }
-            </select>
-          </label>
-        }
       </div>
 
       @if (breakdown().length) {

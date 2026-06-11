@@ -146,16 +146,6 @@ export class TeamSelectionComponent implements OnInit {
     return team.name;
   }
 
-  protected selectContest(contestId: string): void {
-    const contest = this.contests().find((item) => String(this.contestId(item)) === contestId);
-
-    if (!contest || this.selectedContest()?.id === contest.id) {
-      return;
-    }
-
-    this.loadContest(contest);
-  }
-
   protected saveSelection(): void {
     const contest = this.selectedContest();
     const contestId = contest ? this.contestId(contest) : 0;
@@ -212,6 +202,7 @@ export class TeamSelectionComponent implements OnInit {
           }
 
           this.selectedContest.set(contest);
+          this.updateContestQueryParam(contest);
 
           return this.loadContestData(contest);
         })

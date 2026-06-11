@@ -78,21 +78,27 @@ export class App {
   }
 
   protected showDashboard(): void {
-    this.navigateTo('dashboard');
+    const contestId = this.readContestId();
+
+    this.navigateTo('dashboard', false, contestId ? { contestId } : undefined);
   }
 
   protected showTeamSelection(contestId?: number): void {
-    this.navigateTo('team-selection', false, contestId ? { contestId } : undefined);
+    const selectedContestId = contestId ?? this.readContestId();
+
+    this.navigateTo('team-selection', false, selectedContestId ? { contestId: selectedContestId } : undefined);
   }
 
-  protected showPlayerResults(player: LeaderboardEntryDto): void {
+  protected showPlayerResults(event: { player: LeaderboardEntryDto; contestId?: number }): void {
     if (!this.canOpenPrivatePage()) {
       return;
     }
 
+    const { player, contestId } = event;
+    const selectedContestId = contestId ?? this.readContestId();
+
     this.selectedLeaderboardPlayer.set(player);
-    window.history.pushState({}, '', `/igrac/${player.userId}`);
-    this.page.set('player-results');
+    this.navigateTo('player-results', false, selectedContestId ? { contestId: selectedContestId } : undefined);
   }
 
   protected selectedPlayer(): LeaderboardEntryDto | null {
@@ -206,6 +212,13 @@ export class App {
 
   private stringifyQueryParams(queryParams: Record<string, string | number>): Record<string, string> {
     return Object.fromEntries(Object.entries(queryParams).map(([key, value]) => [key, String(value)]));
+  }
+
+  private readContestId(): number | null {
+    const contestId = new URLSearchParams(window.location.search).get('contestId');
+    const parsedContestId = Number(contestId);
+
+    return Number.isInteger(parsedContestId) && parsedContestId > 0 ? parsedContestId : null;
   }
 
   private pageFromPath(): AppPage {

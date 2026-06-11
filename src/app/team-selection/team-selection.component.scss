@@ -42,25 +42,6 @@
   gap: 16px;
 }
 
-.contest-picker {
-  display: grid;
-  gap: 8px;
-  max-width: 360px;
-  margin-bottom: 18px;
-  color: var(--text-secondary);
-  font-weight: 800;
-}
-
-.contest-picker select {
-  min-height: 44px;
-  padding: 0 12px;
-  border: 1px solid rgba(232, 185, 70, 0.34);
-  border-radius: 6px;
-  color: var(--text-primary);
-  background: rgba(0, 0, 0, 0.34);
-  font: inherit;
-}
-
 .lucky-pick {
   display: flex;
   align-items: center;
