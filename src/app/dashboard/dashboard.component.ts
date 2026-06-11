@@ -5,6 +5,7 @@ import type {
   EventParticipantDto,
   ScoreLedgerEntryDto,
   ScorePairDto,
+  UpcomingEventDto,
   UserSelectionDto,
   UserSelectionItemDto,
 } from '../models';
@@ -31,22 +32,26 @@ export class DashboardComponent {
   @Output() logoutClick = new EventEmitter<void>();
   @Output() playerClick = new EventEmitter<{ player: LeaderboardEntryDto; contestId?: number }>();
 
-  private readonly contestIdFromUrl = this.readContestId();
   protected readonly isJoiningContest = signal(false);
   protected readonly joinContestMessage = signal('');
   protected readonly isLoadingLeaderboard = signal(false);
   protected readonly isLoadingSelection = signal(false);
   protected readonly isLoadingScoring = signal(false);
+  protected readonly isLoadingUpcomingEvents = signal(false);
   protected readonly leaderboard = signal<LeaderboardEntryDto[]>([]);
   protected readonly leaderboardMessage = signal('');
   protected readonly myContests = signal<ContestDto[]>([]);
   protected readonly selectedContest = signal<ContestDto | null>(null);
+  protected readonly selectedContestId = signal('');
   protected readonly scoringBreakdown = signal<ScoreLedgerEntryDto[]>([]);
   protected readonly scoringMessage = signal('');
+  protected readonly upcomingEvents = signal<UpcomingEventDto[]>([]);
+  protected readonly upcomingEventsMessage = signal('');
   protected readonly userSelection = signal<UserSelectionDto | null>(null);
   protected readonly selectionItems = signal<UserSelectionItemDto[]>([]);
   protected readonly selectionMessage = signal('');
   protected readonly showJoinLeague = signal(false);
+  protected readonly showUpcomingEvents = signal(false);
   protected readonly activeDashboardTab = signal<DashboardTab>('leaderboard');
   protected readonly quizAnswers = signal<Record<number, boolean>>({});
   protected readonly quizQuestions: QuizQuestion[] = [
@@ -157,6 +162,10 @@ export class DashboardComponent {
 
   protected toggleJoinLeague(): void {
     this.showJoinLeague.update((current) => !current);
+  }
+
+  protected toggleUpcomingEvents(): void {
+    this.showUpcomingEvents.update((current) => !current);
   }
 
   protected entryPoints(entry: ScoreLedgerEntryDto): number {
@@ -289,6 +298,10 @@ export class DashboardComponent {
     return contest.id;
   }
 
+  protected contestIdValue(contest: ContestDto): string {
+    return String(this.contestId(contest));
+  }
+
   protected contestName(contest: ContestDto): string {
     return contest.name;
   }
@@ -297,11 +310,35 @@ export class DashboardComponent {
     return player.username.split('@')[0] || player.username;
   }
 
-  protected selectContest(contestId: string): void {
-    const parsedContestId = Number(contestId);
-    const contest = this.myContests().find((item) => this.contestId(item) === parsedContestId);
+  protected eventHomeTeam(event: UpcomingEventDto): string {
+    return (
+      event.participants.find((participant) => participant.side === 'HOME')?.competitorName ??
+      event.participants[0]?.competitorName ??
+      '-'
+    );
+  }
 
-    if (!contest || this.selectedContest()?.id === contest.id) {
+  protected eventAwayTeam(event: UpcomingEventDto): string {
+    return (
+      event.participants.find((participant) => participant.side === 'AWAY')?.competitorName ??
+      event.participants[1]?.competitorName ??
+      '-'
+    );
+  }
+
+  protected formatEventDate(startsAt: string): string {
+    return new Intl.DateTimeFormat('sr-RS', {
+      day: '2-digit',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(startsAt));
+  }
+
+  protected selectContest(contestId: string): void {
+    const contest = this.myContests().find((item) => this.contestIdValue(item) === contestId);
+
+    if (!contest || this.selectedContestId() === this.contestIdValue(contest)) {
       return;
     }
 
@@ -345,12 +382,15 @@ export class DashboardComponent {
 
         if (!contest) {
           this.selectedContest.set(null);
+          this.selectedContestId.set('');
           this.leaderboard.set([]);
           this.scoringBreakdown.set([]);
+          this.upcomingEvents.set([]);
           this.userSelection.set(null);
           this.selectionItems.set([]);
           this.leaderboardMessage.set('Nema dostupnih fantasy liga.');
           this.scoringMessage.set('Nema dostupnih fantasy liga.');
+          this.upcomingEventsMessage.set('Nema dostupnih meceva.');
           this.selectionMessage.set('Nema dostupnih fantasy liga.');
           return;
         }
@@ -360,12 +400,15 @@ export class DashboardComponent {
       error: () => {
         this.myContests.set([]);
         this.selectedContest.set(null);
+        this.selectedContestId.set('');
         this.leaderboard.set([]);
         this.scoringBreakdown.set([]);
+        this.upcomingEvents.set([]);
         this.userSelection.set(null);
         this.selectionItems.set([]);
         this.leaderboardMessage.set('Fantasy lige nisu ucitane. Pokusajte ponovo kasnije.');
         this.scoringMessage.set('Obracun poena nije ucitan. Pokusajte ponovo kasnije.');
+        this.upcomingEventsMessage.set('Sledeci mecevi nisu ucitani. Pokusajte ponovo kasnije.');
         this.selectionMessage.set('Izbor timova nije ucitan. Pokusajte ponovo kasnije.');
       },
     });
@@ -373,15 +416,19 @@ export class DashboardComponent {
 
   private loadContest(contest: ContestDto): void {
     this.selectedContest.set(contest);
+    this.selectedContestId.set(this.contestIdValue(contest));
     this.updateContestQueryParam(contest);
     this.loadLeaderboard(contest.id);
+    this.loadUpcomingEvents(contest.id);
     this.loadScoringBreakdown(contest.id);
     this.loadUserSelection(contest.id);
   }
 
   private findInitialContest(contests: ContestDto[]): ContestDto | null {
-    if (this.contestIdFromUrl) {
-      const contestFromUrl = contests.find((contest) => this.contestId(contest) === this.contestIdFromUrl);
+    const contestIdFromUrl = this.readContestId();
+
+    if (contestIdFromUrl) {
+      const contestFromUrl = contests.find((contest) => this.contestIdValue(contest) === contestIdFromUrl);
 
       if (contestFromUrl) {
         return contestFromUrl;
@@ -391,11 +438,11 @@ export class DashboardComponent {
     return contests[0] ?? null;
   }
 
-  private readContestId(): number | null {
+  private readContestId(): string | null {
     const contestId = new URLSearchParams(window.location.search).get('contestId');
     const parsedContestId = Number(contestId);
 
-    return Number.isInteger(parsedContestId) && parsedContestId > 0 ? parsedContestId : null;
+    return contestId && Number.isInteger(parsedContestId) && parsedContestId > 0 ? contestId : null;
   }
 
   private updateContestQueryParam(contest: ContestDto): void {
@@ -421,6 +468,32 @@ export class DashboardComponent {
         this.leaderboard.set([]);
         this.isLoadingLeaderboard.set(false);
         this.leaderboardMessage.set('Tabela nije ucitana. Pokusajte ponovo kasnije.');
+      },
+    });
+  }
+
+  private loadUpcomingEvents(contestId: number): void {
+    this.isLoadingUpcomingEvents.set(true);
+    this.upcomingEventsMessage.set('');
+    this.upcomingEvents.set([]);
+
+    this.userSelectionsService.getUpcomingEvents(contestId).subscribe({
+      next: (events) => {
+        const upcomingEvents = [...events]
+          .sort((first, second) => new Date(first.startsAt).getTime() - new Date(second.startsAt).getTime())
+          .slice(0, 5);
+
+        this.upcomingEvents.set(upcomingEvents);
+        this.isLoadingUpcomingEvents.set(false);
+
+        if (!upcomingEvents.length) {
+          this.upcomingEventsMessage.set('Nema zakazanih meceva za ovu ligu.');
+        }
+      },
+      error: () => {
+        this.upcomingEvents.set([]);
+        this.isLoadingUpcomingEvents.set(false);
+        this.upcomingEventsMessage.set('Sledeci mecevi nisu ucitani. Pokusajte ponovo kasnije.');
       },
     });
   }

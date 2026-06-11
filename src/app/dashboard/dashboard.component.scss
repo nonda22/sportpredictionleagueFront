@@ -242,6 +242,135 @@
   outline: none;
 }
 
+.upcoming-events-panel {
+  max-width: 1180px;
+  margin: 0 auto 14px;
+  overflow: hidden;
+  border: 1px solid rgba(232, 185, 70, 0.28);
+  border-radius: 8px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.upcoming-events-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 20px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.upcoming-events-panel:not(.is-open) .upcoming-events-panel__header {
+  border-bottom: 0;
+}
+
+.upcoming-events-panel__header:hover,
+.upcoming-events-panel__header:focus-visible {
+  background: rgba(232, 185, 70, 0.07);
+}
+
+.upcoming-events-panel__header:focus-visible {
+  outline: 2px solid rgba(232, 185, 70, 0.72);
+  outline-offset: -2px;
+}
+
+.upcoming-events-panel__title {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.upcoming-events-panel__title strong {
+  margin: 6px 0 0;
+  color: var(--silver);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.upcoming-events-panel__summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 0 11px;
+  border: 1px solid rgba(232, 185, 70, 0.32);
+  border-radius: 999px;
+  color: var(--gold-light);
+  background: rgba(0, 0, 0, 0.28);
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.upcoming-events-panel__summary svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  transition: transform 160ms ease;
+}
+
+.upcoming-events-panel.is-open .upcoming-events-panel__summary svg {
+  transform: rotate(180deg);
+}
+
+.upcoming-events-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.upcoming-event-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.upcoming-event-card time {
+  color: var(--gold-light);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.upcoming-event-card__match {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.upcoming-event-card__match strong {
+  min-width: 0;
+  color: var(--silver);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.upcoming-event-card__match span,
+.upcoming-event-card__meta,
+.upcoming-events-message {
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.upcoming-events-message {
+  margin: 0;
+  padding: 18px 20px;
+  text-align: center;
+}
+
 .dashboard-tabs {
   max-width: 1180px;
   margin: 0 auto;
@@ -569,15 +698,12 @@
   gap: 12px 18px;
   padding: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.18);
 }
 
 .quiz-question__text {
   display: flex;
   align-items: center;
   gap: 12px;
-  min-width: 0;
 }
 
 .quiz-question__text span {
@@ -588,7 +714,6 @@
 
 .quiz-question__text strong {
   color: var(--silver);
-  line-height: 1.35;
 }
 
 .quiz-question__actions {
@@ -606,7 +731,6 @@
   grid-column: 1 / -1;
   margin: 0;
   color: var(--text-secondary);
-  line-height: 1.45;
 }
 
 .standings-message {
@@ -635,6 +759,10 @@
   .dashboard-tab-list button {
     flex: 1;
     justify-content: center;
+  }
+
+  .upcoming-events-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .dashboard-header {
@@ -719,5 +847,207 @@
 
   .dashboard-actions {
     display: contents;
+  }
+
+  .standings-panel__header {
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .standings-panel__header h2 {
+    font-size: 1.45rem;
+  }
+
+  .standings-panel__header > span {
+    padding: 7px 10px;
+    font-size: 0.78rem;
+  }
+
+  .selection-summary {
+    align-items: flex-start;
+    padding: 12px 16px;
+    font-size: 0.86rem;
+  }
+
+  .upcoming-events-panel {
+    margin-bottom: 12px;
+  }
+
+  .upcoming-events-panel__header {
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .upcoming-events-panel__title strong {
+    font-size: 1.25rem;
+  }
+
+  .upcoming-events-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+    background: transparent;
+  }
+
+  .upcoming-event-card {
+    grid-template-columns: 74px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .upcoming-event-card__match {
+    gap: 3px;
+  }
+
+  .upcoming-event-card__meta {
+    justify-self: end;
+    white-space: nowrap;
+  }
+
+  .standings-table-wrap {
+    overflow: visible;
+    padding: 12px;
+  }
+
+  .standings-table,
+  .standings-table thead,
+  .standings-table tbody,
+  .standings-table tr,
+  .standings-table th,
+  .standings-table td {
+    display: block;
+  }
+
+  .standings-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .standings-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .standings-table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .standings-table tbody tr {
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .standings-table th,
+  .standings-table td {
+    border-bottom: 0;
+  }
+
+  .standings-table td {
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1fr);
+    align-items: center;
+    justify-content: start;
+    gap: 8px;
+    min-width: 0;
+    padding: 8px 0;
+  }
+
+  .standings-table td::before {
+    content: attr(data-label);
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .standings-table td:first-child {
+    padding-top: 0;
+  }
+
+  .standings-table td:last-child {
+    padding-bottom: 0;
+  }
+
+  .standings-message {
+    display: block;
+    padding: 18px 8px;
+  }
+
+  .standings-message::before {
+    content: none;
+  }
+
+  .player-cell,
+  .team-cell,
+  .match-participants,
+  .rank-badge,
+  .mobile-value,
+  .score-result {
+    min-width: 0;
+    justify-self: start;
+  }
+
+  .rank-badge,
+  .player-cell,
+  .team-cell {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .player-cell > div,
+  .team-cell strong,
+  .match-team > span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .player-cell > div strong,
+  .team-cell strong {
+    display: block;
+  }
+
+  .rank-badge {
+    min-width: 0;
+  }
+
+  .rank-badge svg {
+    grid-column: 1;
+    justify-self: center;
+  }
+
+  .rank-badge strong {
+    grid-column: 2;
+  }
+
+  .standings-table td > .points,
+  .standings-table td > .mobile-value,
+  .score-result {
+    margin-left: 44px;
+  }
+
+  .scoring-table .team-cell {
+    grid-template-columns: 34px;
+  }
+
+  .score-result {
+    width: 100%;
+    max-width: calc(100% - 44px);
   }
 }

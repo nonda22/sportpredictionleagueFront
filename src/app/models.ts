@@ -134,3 +134,17 @@ export type EventParticipantDto = {
   winner?: boolean;
   resultPoints?: number;
 };
+
+export type UpcomingEventDto = {
+  id: number;
+  competitionId: number;
+  competitionName: string;
+  sport: Sport;
+  type: string;
+  status: string;
+  startsAt: string;
+  stage?: string;
+  externalId?: number;
+  eventDay?: number;
+  participants: EventParticipantDto[];
+};

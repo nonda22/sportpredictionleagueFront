@@ -54,12 +54,59 @@
     @if (myContests().length > 1) {
       <label class="contest-picker">
         <span>Fantasy liga</span>
-        <select [value]="selectedContest()?.id ?? ''" (change)="selectContest($any($event.target).value)">
+        <select [value]="selectedContestId()" (change)="selectContest($any($event.target).value)">
           @for (contest of myContests(); track contestId(contest)) {
-            <option [value]="contestId(contest)">{{ contestName(contest) }}</option>
+            <option [value]="contestIdValue(contest)" [selected]="selectedContestId() === contestIdValue(contest)">
+              {{ contestName(contest) }}
+            </option>
           }
         </select>
       </label>
+    }
+  </section>
+
+  <section class="upcoming-events-panel" [class.is-open]="showUpcomingEvents()" aria-labelledby="upcoming-events-title">
+    <button
+      class="upcoming-events-panel__header"
+      type="button"
+      [attr.aria-expanded]="showUpcomingEvents()"
+      aria-controls="upcoming-events-content"
+      (click)="toggleUpcomingEvents()"
+    >
+      <span class="upcoming-events-panel__title">
+        <span class="panel__label">Raspored</span>
+        <strong id="upcoming-events-title">Sledeci mecevi</strong>
+      </span>
+      <span class="upcoming-events-panel__summary">
+        {{ upcomingEvents().length }}/5
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m7.4 8.6 4.6 4.6 4.6-4.6L18 10l-6 6-6-6 1.4-1.4Z" />
+        </svg>
+      </span>
+    </button>
+
+    @if (showUpcomingEvents()) {
+      <div id="upcoming-events-content">
+        @if (isLoadingUpcomingEvents()) {
+          <p class="upcoming-events-message">Mecevi se ucitavaju...</p>
+        } @else if (upcomingEventsMessage()) {
+          <p class="upcoming-events-message">{{ upcomingEventsMessage() }}</p>
+        } @else {
+          <div class="upcoming-events-list">
+            @for (event of upcomingEvents(); track event.id) {
+              <article class="upcoming-event-card">
+                <time [attr.datetime]="event.startsAt">{{ formatEventDate(event.startsAt) }}</time>
+                <div class="upcoming-event-card__match">
+                  <strong>{{ eventHomeTeam(event) }}</strong>
+                  <span>vs</span>
+                  <strong>{{ eventAwayTeam(event) }}</strong>
+                </div>
+                <span class="upcoming-event-card__meta">Dan {{ event.eventDay || '-' }}</span>
+              </article>
+            }
+          </div>
+        }
+      </div>
     }
   </section>
 
@@ -137,7 +184,7 @@
                 (keydown.enter)="openPlayerResults(player)"
                 (keydown.space)="openPlayerResults(player)"
               >
-                <td>
+                <td data-label="Pozicija">
                   <span class="rank-badge">
                     @if (player.rank <= 3) {
                       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -149,7 +196,7 @@
                     <strong>{{ player.rank }}</strong>
                   </span>
                 </td>
-                <td>
+                <td data-label="Igrac">
                   <div class="player-cell">
                     <span>{{ displayUsername(player).slice(0, 1) }}</span>
                     <div>
@@ -157,7 +204,7 @@
                     </div>
                   </div>
                 </td>
-                <td><strong class="points">{{ player.points }}</strong></td>
+                <td data-label="Poeni"><strong class="points">{{ player.points }}</strong></td>
               </tr>
             }
 
@@ -202,14 +249,14 @@
           <tbody>
             @for (item of selectionItems(); track item.id) {
               <tr>
-                <td>
+                <td data-label="Tim">
                   <div class="team-cell">
                     <span>{{ item.competitorName.slice(0, 1) }}</span>
                     <strong>{{ item.competitorName }}</strong>
                   </div>
                 </td>
-                <td>{{ item.competitorType }}</td>
-                <td><strong class="points">{{ item.points }}</strong></td>
+                <td data-label="Tip"><span class="mobile-value">{{ item.competitorType }}</span></td>
+                <td data-label="Poeni"><strong class="points">{{ item.points }}</strong></td>
               </tr>
             }
 
@@ -254,7 +301,7 @@
           <tbody>
             @for (entry of scoringBreakdown(); track $index) {
               <tr>
-                <td>
+                <td data-label="Tim">
                   <div
                     class="team-cell"
                     [class]="'team-cell--' + entryOutcome(entry)"
@@ -264,7 +311,7 @@
                     <span>{{ entryCompetitor(entry).slice(0, 1) }}</span>
                   </div>
                 </td>
-                <td>
+                <td data-label="Mec">
                   @if (entry.eventParticipants?.length) {
                     <div class="match-participants">
                       @for (participant of entry.eventParticipants; track participant.id) {
@@ -303,10 +350,10 @@
                       }
                     </div>
                   } @else {
-                    {{ entryMatch(entry) }}
+                    <span class="mobile-value">{{ entryMatch(entry) }}</span>
                   }
                 </td>
-                <td>
+                <td data-label="Rezultat">
                   @if (scoreRows(entry).length) {
                     <div class="score-result" [class]="'score-result--' + entryOutcome(entry)">
                       <div class="score-lines">
@@ -317,10 +364,10 @@
                       <strong>{{ entryOutcomeLabel(entry) }}</strong>
                     </div>
                   } @else {
-                    -
+                    <span class="mobile-value">-</span>
                   }
                 </td>
-                <td>
+                <td data-label="Poeni">
                   <strong class="points" [class]="'points--' + entryOutcome(entry)">
                     {{ formatPoints(entryPoints(entry)) }}
                   </strong>

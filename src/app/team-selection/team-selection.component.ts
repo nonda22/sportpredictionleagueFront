@@ -21,7 +21,6 @@ const DEFAULT_MAX_SELECTIONS = 4;
   styleUrl: './team-selection.component.scss',
 })
 export class TeamSelectionComponent implements OnInit {
-  private readonly contestIdFromUrl = this.readContestId();
   protected readonly contests = signal<ContestDto[]>([]);
   protected readonly selectedContest = signal<ContestDto | null>(null);
   protected readonly pots = signal<TeamPot[]>([]);
@@ -316,8 +315,10 @@ export class TeamSelectionComponent implements OnInit {
   }
 
   private findInitialContest(contests: ContestDto[]): ContestDto | null {
-    if (this.contestIdFromUrl) {
-      const contestFromUrl = contests.find((contest) => this.contestId(contest) === this.contestIdFromUrl);
+    const contestIdFromUrl = this.readContestId();
+
+    if (contestIdFromUrl) {
+      const contestFromUrl = contests.find((contest) => String(this.contestId(contest)) === contestIdFromUrl);
 
       if (contestFromUrl) {
         return contestFromUrl;
@@ -327,11 +328,11 @@ export class TeamSelectionComponent implements OnInit {
     return contests[0] ?? null;
   }
 
-  private readContestId(): number | null {
+  private readContestId(): string | null {
     const contestId = new URLSearchParams(window.location.search).get('contestId');
     const parsedContestId = Number(contestId);
 
-    return Number.isInteger(parsedContestId) && parsedContestId > 0 ? parsedContestId : null;
+    return contestId && Number.isInteger(parsedContestId) && parsedContestId > 0 ? contestId : null;
   }
 
   private updateContestQueryParam(contest: ContestDto): void {

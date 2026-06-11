@@ -172,8 +172,8 @@ export class PlayerResultsComponent implements OnChanges, OnInit {
     const contestId = new URLSearchParams(window.location.search).get('contestId');
     const parsedContestId = Number(contestId);
 
-    if (Number.isInteger(parsedContestId) && parsedContestId > 0) {
-      const contest = contests.find((item) => item.id === parsedContestId);
+    if (contestId && Number.isInteger(parsedContestId) && parsedContestId > 0) {
+      const contest = contests.find((item) => String(item.id) === contestId);
 
       if (contest) {
         return contest;
