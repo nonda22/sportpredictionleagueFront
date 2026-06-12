@@ -10,7 +10,7 @@
     </div>
     <div>
       <span>Poeni po mecu</span>
-      <strong>{{ totalBreakdownPoints() | number: '1.0-2' }}</strong>
+      <strong>{{ formatPoints(totalBreakdownPoints()) }}</strong>
     </div>
   </div>
 
@@ -34,46 +34,100 @@
       </div>
     </section>
 
-    <section class="player-results__history" aria-labelledby="history-title">
-      <div class="player-results__section-title">
+    <section class="player-results__history standings-panel" aria-labelledby="history-title">
+      <div class="player-results__section-title standings-panel__header">
         <div>
           <p class="panel__label">Mecevi</p>
           <h3 id="history-title">Poeni po mecu</h3>
         </div>
+        <span>{{ formatPoints(totalBreakdownPoints()) }} pts</span>
       </div>
 
       @if (breakdown().length) {
-        <div class="history-table-wrap">
-          <table class="history-table">
+        <div class="history-table-wrap standings-table-wrap">
+          <table class="history-table standings-table scoring-table">
             <thead>
               <tr>
-                <th scope="col">Datum</th>
+                <th scope="col">Tim</th>
                 <th scope="col">Mec</th>
-                <th scope="col">Izbor</th>
                 <th scope="col">Rezultat</th>
-                <th scope="col">Opis</th>
-                <th scope="col">Bodovi</th>
+                <th scope="col">Poeni</th>
               </tr>
             </thead>
             <tbody>
               @for (entry of breakdown(); track entry.id ?? entry.eventId ?? entryMatch(entry)) {
                 <tr>
-                  <td>{{ entryDate(entry) }}</td>
-                  <td><strong>{{ entryMatch(entry) }}</strong></td>
-                  <td>{{ entrySelection(entry) }}</td>
-                  <td>
-                    @if (scoreRows(entry).length) {
-                      <div class="score-lines">
-                        @for (row of scoreRows(entry); track row.label) {
-                          <span><small>{{ row.label }}</small>{{ row.value }}</span>
+                  <td data-label="Tim">
+                    <div
+                      class="team-cell"
+                      [class]="'team-cell--' + entryOutcome(entry)"
+                      [title]="entrySelection(entry)"
+                      [attr.aria-label]="entrySelection(entry)"
+                    >
+                      <span>{{ entrySelection(entry).slice(0, 1) }}</span>
+                    </div>
+                  </td>
+                  <td data-label="Mec">
+                    @if (entry.eventParticipants?.length) {
+                      <div class="match-participants">
+                        @for (participant of entry.eventParticipants; track participant.id) {
+                          <strong
+                            class="match-team"
+                            [class.is-mine]="isEntryParticipant(entry, participant.competitorName)"
+                            [class.match-team--win]="entryParticipantOutcome(entry, participant) === 'win'"
+                            [class.match-team--draw]="entryParticipantOutcome(entry, participant) === 'draw'"
+                            [class.match-team--loss]="entryParticipantOutcome(entry, participant) === 'loss'"
+                            [class.match-team--unknown]="entryParticipantOutcome(entry, participant) === 'unknown'"
+                          >
+                            <span class="match-icon" aria-hidden="true">
+                              @if (entryParticipantOutcome(entry, participant) === 'win') {
+                                <svg viewBox="0 0 24 24">
+                                  <path d="M20.3 6.7 9 18l-5.3-5.3 1.4-1.4L9 14.9 18.9 5.3l1.4 1.4Z" />
+                                </svg>
+                              } @else if (entryParticipantOutcome(entry, participant) === 'draw') {
+                                <svg viewBox="0 0 24 24">
+                                  <path d="M5 11h14v2H5v-2Z" />
+                                </svg>
+                              } @else if (entryParticipantOutcome(entry, participant) === 'loss') {
+                                <svg viewBox="0 0 24 24">
+                                  <path d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z" />
+                                </svg>
+                              } @else {
+                                <svg viewBox="0 0 24 24">
+                                  <path d="M12 3 20 6v6c0 4.4-3 7.7-8 9-5-1.3-8-4.6-8-9V6l8-3Zm0 2.2L6 7.4V12c0 3.3 2.1 5.8 6 7 3.9-1.2 6-3.7 6-7V7.4l-6-2.2Z" />
+                                </svg>
+                              }
+                            </span>
+                            <span>{{ participant.competitorName }}</span>
+                          </strong>
+                          @if (!$last) {
+                            <span>vs</span>
+                          }
                         }
                       </div>
                     } @else {
-                      -
+                      <span class="mobile-value">{{ entryMatch(entry) }}</span>
                     }
                   </td>
-                  <td>{{ entry.outcome ?? entry.reason ?? '-' }}</td>
-                  <td><strong>{{ entryPoints(entry) | number: '1.0-2' }}</strong></td>
+                  <td data-label="Rezultat">
+                    @if (scoreRows(entry).length) {
+                      <div class="score-result" [class]="'score-result--' + entryOutcome(entry)">
+                        <div class="score-lines">
+                          @for (row of scoreRows(entry); track row.label) {
+                            <span><small>{{ row.label }}</small>{{ row.value }}</span>
+                          }
+                        </div>
+                        <strong>{{ entryOutcomeLabel(entry) }}</strong>
+                      </div>
+                    } @else {
+                      <span class="mobile-value">-</span>
+                    }
+                  </td>
+                  <td data-label="Poeni">
+                    <strong class="points" [class]="'points--' + entryOutcome(entry)">
+                      {{ formatPoints(entryPoints(entry)) }}
+                    </strong>
+                  </td>
                 </tr>
               }
             </tbody>

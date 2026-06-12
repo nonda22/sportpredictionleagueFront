@@ -101,7 +101,7 @@
                   <span>vs</span>
                   <strong>{{ eventAwayTeam(event) }}</strong>
                 </div>
-                <span class="upcoming-event-card__meta">Dan {{ event.eventDay || '-' }}</span>
+                <span class="upcoming-event-card__meta">Kolo {{ event.eventDay || '-' }}</span>
               </article>
             }
           </div>
@@ -204,7 +204,7 @@
                     </div>
                   </div>
                 </td>
-                <td data-label="Poeni"><strong class="points">{{ player.points }}</strong></td>
+                <td data-label="Poeni"><strong class="points">{{ formatPoints(player.points) }}</strong></td>
               </tr>
             }
 
@@ -229,7 +229,7 @@
           <p class="panel__label">Moj izbor</p>
           <h2 id="selection-title">Timovi</h2>
         </div>
-        <span>{{ selectionPoints() }} pts</span>
+        <span>{{ formatPoints(selectionPoints()) }} pts</span>
       </div>
 
       <div class="selection-summary">
@@ -256,7 +256,7 @@
                   </div>
                 </td>
                 <td data-label="Tip"><span class="mobile-value">{{ item.competitorType }}</span></td>
-                <td data-label="Poeni"><strong class="points">{{ item.points }}</strong></td>
+                <td data-label="Poeni"><strong class="points">{{ formatPoints(item.points) }}</strong></td>
               </tr>
             }
 

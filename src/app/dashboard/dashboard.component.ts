@@ -116,7 +116,17 @@ export class DashboardComponent {
       explanation: 'Ne u standardnom toku trke. U MotoGP-u se kod promene uslova uglavnom menja motor.',
     },
   ];
-  protected readonly canSelectTeams = computed(() => this.myContests().some((contest) => contest.status === 'OPEN'));
+  protected readonly canSelectTeams = computed(() => {
+    const contest = this.selectedContest();
+    const selectionStatus = this.userSelection()?.status;
+
+    return (
+      contest?.status === 'OPEN' &&
+      !this.isLoadingSelection() &&
+      selectionStatus !== 'SUBMITTED' &&
+      selectionStatus !== 'LOCKED'
+    );
+  });
   protected readonly selectionPoints = computed(() => this.userSelection()?.points ?? 0);
   protected readonly scoringPoints = computed(() =>
     this.scoringBreakdown().reduce((total, entry) => total + this.entryPoints(entry), 0)
@@ -173,7 +183,7 @@ export class DashboardComponent {
   }
 
   protected formatPoints(points: number): string {
-    return points.toFixed(2);
+    return points.toFixed(0);
   }
 
   protected entryCompetitor(entry: ScoreLedgerEntryDto): string {

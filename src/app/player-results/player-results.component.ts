@@ -1,14 +1,19 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, Input, OnChanges, OnInit, SimpleChanges, signal } from '@angular/core';
 import { forkJoin } from 'rxjs';
-import type { ContestDto, LeaderboardEntryDto, ScoreLedgerEntryDto, ScorePairDto, UserSelectionDto } from '../models';
+import type {
+  ContestDto,
+  EventParticipantDto,
+  LeaderboardEntryDto,
+  ScoreLedgerEntryDto,
+  ScorePairDto,
+  UserSelectionDto,
+} from '../models';
 import { ScoringService } from '../scoring.service';
 import { ContestsService } from '../team-selection/contests.service';
 import { UserSelectionsService } from '../team-selection/user-selections.service';
 
 @Component({
   selector: 'app-player-results',
-  imports: [DecimalPipe],
   templateUrl: './player-results.component.html',
   styleUrl: './player-results.component.scss',
 })
@@ -104,15 +109,78 @@ export class PlayerResultsComponent implements OnChanges, OnInit {
       rows.push({ label: 'Penali', value: this.formatScore(score.penalties) });
     }
 
-    if (score.winner) {
-      rows.push({ label: 'Pobednik', value: score.winner });
-    }
-
     return rows;
   }
 
   protected entryPoints(entry: ScoreLedgerEntryDto): number {
     return entry.points ?? entry.pointsDelta ?? entry.awardedPoints ?? 0;
+  }
+
+  protected formatPoints(points: number): string {
+    return points.toFixed(0);
+  }
+
+  protected entryOutcome(entry: ScoreLedgerEntryDto): 'win' | 'draw' | 'loss' | 'unknown' {
+    const selectedParticipant = this.entrySelectedParticipant(entry);
+
+    if (selectedParticipant?.winner === true) {
+      return 'win';
+    }
+
+    if (this.isDraw(entry)) {
+      return 'draw';
+    }
+
+    if (selectedParticipant?.winner === false || entry.score?.winner) {
+      return 'loss';
+    }
+
+    return 'unknown';
+  }
+
+  protected entryOutcomeLabel(entry: ScoreLedgerEntryDto): string {
+    const outcome = this.entryOutcome(entry);
+
+    if (outcome === 'win') {
+      return 'Pobeda';
+    }
+
+    if (outcome === 'draw') {
+      return 'Remi';
+    }
+
+    if (outcome === 'loss') {
+      return 'Poraz';
+    }
+
+    return 'Nepoznato';
+  }
+
+  protected isEntryParticipant(entry: ScoreLedgerEntryDto, competitorName: string): boolean {
+    return entry.competitorName === competitorName || entry.selectionName === competitorName;
+  }
+
+  protected entryParticipantOutcome(
+    entry: ScoreLedgerEntryDto,
+    participant: EventParticipantDto
+  ): 'win' | 'draw' | 'loss' | 'unknown' {
+    if (this.isEntryParticipant(entry, participant.competitorName)) {
+      return this.entryOutcome(entry);
+    }
+
+    if (this.isDraw(entry)) {
+      return 'draw';
+    }
+
+    if (participant.winner === true) {
+      return 'win';
+    }
+
+    if (participant.winner === false || entry.score?.winner) {
+      return 'loss';
+    }
+
+    return 'unknown';
   }
 
   private loadContests(): void {
@@ -191,5 +259,38 @@ export class PlayerResultsComponent implements OnChanges, OnInit {
 
   private formatScore(score: ScorePairDto): string {
     return `${score.home}:${score.away}`;
+  }
+
+  private entrySelectedParticipant(entry: ScoreLedgerEntryDto) {
+    return entry.eventParticipants?.find(
+      (participant) =>
+        participant.competitorId === entry.competitorId ||
+        participant.competitorName === entry.competitorName ||
+        participant.competitorName === entry.selectionName
+    );
+  }
+
+  private isDraw(entry: ScoreLedgerEntryDto): boolean {
+    const finalScore = this.finalScore(entry);
+
+    return !!finalScore && finalScore.home === finalScore.away;
+  }
+
+  private finalScore(entry: ScoreLedgerEntryDto): ScorePairDto | undefined {
+    const score = entry.score;
+
+    if (!score) {
+      return undefined;
+    }
+
+    if (score.duration === 'PENALTY_SHOOTOUT') {
+      return score.penalties ?? score.extraTime ?? score.fullTime;
+    }
+
+    if (score.duration === 'EXTRA_TIME') {
+      return score.extraTime ?? score.fullTime;
+    }
+
+    return score.fullTime;
   }
 }
