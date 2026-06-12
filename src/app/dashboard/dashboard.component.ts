@@ -118,14 +118,8 @@ export class DashboardComponent {
   ];
   protected readonly canSelectTeams = computed(() => {
     const contest = this.selectedContest();
-    const selectionStatus = this.userSelection()?.status;
 
-    return (
-      contest?.status === 'OPEN' &&
-      !this.isLoadingSelection() &&
-      selectionStatus !== 'SUBMITTED' &&
-      selectionStatus !== 'LOCKED'
-    );
+    return contest?.status === 'OPEN';
   });
   protected readonly selectionPoints = computed(() => this.userSelection()?.points ?? 0);
   protected readonly scoringPoints = computed(() =>
@@ -183,7 +177,7 @@ export class DashboardComponent {
   }
 
   protected formatPoints(points: number): string {
-    return points.toFixed(0);
+    return points.toFixed(2);
   }
 
   protected entryCompetitor(entry: ScoreLedgerEntryDto): string {

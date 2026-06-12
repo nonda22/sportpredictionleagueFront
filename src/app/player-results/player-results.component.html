@@ -6,11 +6,11 @@
     </div>
     <div>
       <span>Korisnik</span>
-      <strong>{{ displayedPlayer()?.username ?? player.username }}</strong>
+      <strong>{{ displayUsername(displayedPlayer()?.username ?? player.username) }}</strong>
     </div>
     <div>
-      <span>Poeni po mecu</span>
-      <strong>{{ formatPoints(totalBreakdownPoints()) }}</strong>
+      <span>Ukupno poena</span>
+      <strong>{{ totalBreakdownPoints() | number: '1.0-2' }}</strong>
     </div>
   </div>
 
@@ -40,7 +40,7 @@
           <p class="panel__label">Mecevi</p>
           <h3 id="history-title">Poeni po mecu</h3>
         </div>
-        <span>{{ formatPoints(totalBreakdownPoints()) }} pts</span>
+        <span>{{ totalBreakdownPoints() | number: '1.0-2' }} pts</span>
       </div>
 
       @if (breakdown().length) {
@@ -125,7 +125,7 @@
                   </td>
                   <td data-label="Poeni">
                     <strong class="points" [class]="'points--' + entryOutcome(entry)">
-                      {{ formatPoints(entryPoints(entry)) }}
+                      {{ entryPoints(entry) | number: '1.0-2' }}
                     </strong>
                   </td>
                 </tr>

@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, signal } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import type {
   ContestDto,
@@ -14,6 +15,7 @@ import { UserSelectionsService } from '../team-selection/user-selections.service
 
 @Component({
   selector: 'app-player-results',
+  imports: [DecimalPipe],
   templateUrl: './player-results.component.html',
   styleUrl: './player-results.component.scss',
 })
@@ -47,6 +49,10 @@ export class PlayerResultsComponent implements OnChanges, OnInit {
 
   protected totalBreakdownPoints(): number {
     return this.breakdown().reduce((total, entry) => total + this.entryPoints(entry), 0);
+  }
+
+  protected displayUsername(username: string): string {
+    return username.split('@')[0] || username;
   }
 
   protected entryDate(entry: ScoreLedgerEntryDto): string {
@@ -114,10 +120,6 @@ export class PlayerResultsComponent implements OnChanges, OnInit {
 
   protected entryPoints(entry: ScoreLedgerEntryDto): number {
     return entry.points ?? entry.pointsDelta ?? entry.awardedPoints ?? 0;
-  }
-
-  protected formatPoints(points: number): string {
-    return points.toFixed(0);
   }
 
   protected entryOutcome(entry: ScoreLedgerEntryDto): 'win' | 'draw' | 'loss' | 'unknown' {

@@ -28,7 +28,7 @@
 
 .player-results__stats {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1.6fr) minmax(150px, 1fr);
   gap: 1px;
   margin-top: 16px;
   overflow: hidden;
@@ -50,8 +50,10 @@
 }
 
 .player-results__stats strong {
+  min-width: 0;
   color: var(--gold-light);
   font-size: 1.65rem;
+  overflow-wrap: anywhere;
 }
 
 .player-results__teams,
