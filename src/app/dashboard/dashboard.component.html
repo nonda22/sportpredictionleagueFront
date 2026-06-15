@@ -8,8 +8,8 @@
       </div>
     </div>
     <div class="dashboard-actions">
-      <button class="logout-button team-selection-link-button" type="button" [disabled]="!canSelectTeams()" (click)="teamSelectionClick.emit(selectedContest()?.id)">
-        Izaberi timove
+      <button class="logout-button team-selection-link-button" type="button" [disabled]="!selectedContest()" (click)="teamSelectionClick.emit(selectedContest()?.id)">
+        {{ selectedContest()?.status === 'OPEN' ? 'Izaberi timove' : 'Pogledaj kvote' }}
       </button>
       <button class="logout-button logout-button--icon" type="button" aria-label="Logout" title="Logout" (click)="logoutClick.emit()">
         <svg viewBox="0 0 24 24" aria-hidden="true">

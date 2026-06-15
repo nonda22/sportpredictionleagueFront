@@ -32,6 +32,7 @@ export class TeamSelectionComponent implements OnInit {
   protected readonly hasUsedLuckyPick = signal(false);
   protected readonly showGroups = signal(false);
   protected readonly maxSelections = computed(() => this.resolveMaxSelections());
+  protected readonly canEditSelection = computed(() => this.selectedContest()?.status === 'OPEN');
   protected readonly selectedTeamNames = computed(() => {
     const names: string[] = [];
     const selected = this.selectedTeams();
@@ -59,6 +60,10 @@ export class TeamSelectionComponent implements OnInit {
   }
 
   protected toggleTeam(team: CompetitorDto, checked: boolean): void {
+    if (!this.canEditSelection()) {
+      return;
+    }
+
     this.saveMessage.set('');
 
     this.selectedTeams.update((current) => {
@@ -87,7 +92,7 @@ export class TeamSelectionComponent implements OnInit {
   protected useLuckyPick(): void {
     const contest = this.selectedContest();
 
-    if (!contest || this.hasUsedLuckyPick()) {
+    if (!contest || !this.canEditSelection() || this.hasUsedLuckyPick()) {
       return;
     }
 
@@ -120,10 +125,20 @@ export class TeamSelectionComponent implements OnInit {
   }
 
   protected isLuckyPickDisabled(): boolean {
-    return this.hasUsedLuckyPick() || this.maxSelections() <= 0 || potsSelectionLimit(this.pots()) < this.maxSelections() || this.isSaving();
+    return (
+      !this.canEditSelection() ||
+      this.hasUsedLuckyPick() ||
+      this.maxSelections() <= 0 ||
+      potsSelectionLimit(this.pots()) < this.maxSelections() ||
+      this.isSaving()
+    );
   }
 
   protected isTeamDisabled(team: CompetitorDto): boolean {
+    if (!this.canEditSelection()) {
+      return true;
+    }
+
     const pot = this.findTeamPot(team);
 
     return !this.selectedTeams()[team.id] && !pot?.teams.some((potTeam) => this.selectedTeams()[potTeam.id]) && this.isSelectionFull();
@@ -151,6 +166,11 @@ export class TeamSelectionComponent implements OnInit {
 
     if (!contestId) {
       this.saveMessage.set('Fantasy liga nije izabrana.');
+      return;
+    }
+
+    if (!this.canEditSelection()) {
+      this.saveMessage.set('Izbor timova je zakljucan za ovu ligu.');
       return;
     }
 

@@ -13,6 +13,9 @@
     } @else {
       <p>Ucitavanje fantasy liga...</p>
     }
+    @if (selectedContest() && !canEditSelection()) {
+      <p>Izbor timova je zakljucan za ovu ligu.</p>
+    }
   </div>
 
   @if (isLoading()) {
@@ -92,7 +95,7 @@
       <button
         class="save-button"
         type="button"
-        [disabled]="selectedCount() !== maxSelections() || isSaving()"
+        [disabled]="!canEditSelection() || selectedCount() !== maxSelections() || isSaving()"
         (click)="saveSelection()"
       >
         {{ isSaving() ? 'Cuvanje...' : hasExistingSelection() ? 'Azuriraj izbor' : 'Sacuvaj izbor' }}
